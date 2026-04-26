@@ -1,0 +1,9 @@
+.turbo
+.next
+dist
+coverage
+node_modules
+.env
+.env.local
+*.tsbuildinfo
+prisma/migrations

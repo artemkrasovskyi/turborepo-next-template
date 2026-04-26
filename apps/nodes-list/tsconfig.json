@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@repo/shared/*": ["../../packages/shared/src/*"],
+      "@repo/api-client/*": ["../../packages/api-client/src/*"],
+      "@repo/types/*": ["../../packages-types/src/*"]
+    }
+  },
+  "include": ["../../global.d.ts", "next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@repo/nodes-list",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port 3001",
+    "lint": "next lint",
+    "stylelint": "stylelint \"src/**/*.{css,scss}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/api-client": "workspace:*",
+    "@repo/shared": "workspace:*",
+    "@repo/types": "workspace:*",
+    "next": "^15.0.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20"
+  }
+}

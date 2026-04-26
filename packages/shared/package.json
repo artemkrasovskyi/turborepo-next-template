@@ -1,0 +1,22 @@
+{
+  "name": "@repo/shared",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./features/app-config": "./src/features/app-config/index.ts",
+    "./features/database": "./src/features/database/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "stylelint": "stylelint \"src/**/*.{css,scss}\" --allow-empty-input",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "devDependencies": {
+    "@repo/types": "workspace:*",
+    "@types/node": "^22.10.1"
+  }
+}

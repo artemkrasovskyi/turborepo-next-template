@@ -1,0 +1,21 @@
+{
+  "name": "@repo/api-client",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./features/notes": "./src/features/notes/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "stylelint": "stylelint \"src/**/*.{css,scss}\" --allow-empty-input",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/shared": "workspace:*",
+    "@repo/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  }
+}
