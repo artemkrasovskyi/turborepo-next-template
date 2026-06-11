@@ -1,3 +1,3 @@
 export function getAppName() {
-  return 'Notes Workspace';
+  return 'Flock';
 }

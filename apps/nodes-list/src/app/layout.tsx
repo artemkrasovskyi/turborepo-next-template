@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Notes List',
-  description: 'Feature-based notes list application',
+  title: 'Flock Admin',
+  description: 'Internal tools for Flock',
 };
 
 export default function RootLayout({
