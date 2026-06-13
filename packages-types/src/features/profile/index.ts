@@ -7,4 +7,5 @@ export type ProfileUser = {
   createdAt: string;
   followerCount: number;
   followingCount: number;
+  isFollowing: boolean;
 };

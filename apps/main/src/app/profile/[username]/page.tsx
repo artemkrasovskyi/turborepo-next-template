@@ -1,10 +1,12 @@
 import { createProfileClient } from '@repo/api-client/features/profile';
+import { createUsersClient } from '@repo/api-client/features/users';
 import { ProfileHeader } from '@/features/profile/components/profile-header';
 import { ProfilePosts } from '@/features/profile/components/profile-posts';
 
 export const dynamic = 'force-dynamic';
 
 const profileClient = createProfileClient();
+const usersClient = createUsersClient();
 
 type ProfilePageProps = {
   params: Promise<{ username: string }>;
@@ -12,7 +14,8 @@ type ProfilePageProps = {
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { username } = await params;
-  const profile = await profileClient.getProfileByUsername(username);
+  const viewer = await usersClient.getViewerUser();
+  const profile = await profileClient.getProfileByUsername(username, viewer?.id);
 
   if (!profile) {
     return (
@@ -29,7 +32,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12">
-      <ProfileHeader profile={profile} />
+      <ProfileHeader profile={profile} viewerId={viewer?.id ?? null} />
       <ProfilePosts userId={profile.id} />
     </main>
   );

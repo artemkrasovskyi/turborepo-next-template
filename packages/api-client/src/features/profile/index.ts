@@ -13,7 +13,7 @@ type GetProfilePostsParams = {
 
 export function createProfileClient() {
   return {
-    async getProfileByUsername(username: string): Promise<ProfileUser | null> {
+    async getProfileByUsername(username: string, viewerId?: string): Promise<ProfileUser | null> {
       const user = await prisma.user.findUnique({
         where: { username },
         select: {
@@ -31,6 +31,13 @@ export function createProfileClient() {
         return null;
       }
 
+      const isFollowing =
+        viewerId !== undefined
+          ? (await prisma.follow.findUnique({
+              where: { followerId_followingId: { followerId: viewerId, followingId: user.id } },
+            })) !== null
+          : false;
+
       return {
         id: user.id,
         username: user.username,
@@ -40,6 +47,7 @@ export function createProfileClient() {
         createdAt: user.createdAt.toISOString(),
         followerCount: user._count.followers,
         followingCount: user._count.following,
+        isFollowing,
       };
     },
 
