@@ -1,5 +1,6 @@
 import { createUsersClient } from '@repo/api-client/features/users';
 import { FeedList } from '@/features/feed/components/feed-list';
+import { PostComposer } from '@/features/post-composer/components/post-composer';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +34,7 @@ export default async function Page() {
           Posts from people you follow, and your own posts.
         </p>
       </header>
+      <PostComposer authorId={viewer.id} />
       <FeedList viewerId={viewer.id} />
     </main>
   );

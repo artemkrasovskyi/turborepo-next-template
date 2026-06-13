@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./features/feed": "./src/features/feed/index.ts",
+    "./features/posts": "./src/features/posts/index.ts",
     "./features/users": "./src/features/users/index.ts"
   },
   "scripts": {
