@@ -6,10 +6,14 @@ const profileClient = createProfileClient();
 
 type ProfilePostsProps = {
   userId: string;
+  viewerId: string | null;
 };
 
-export async function ProfilePosts({ userId }: ProfilePostsProps) {
-  const { items, nextCursor } = await profileClient.getProfilePosts({ userId });
+export async function ProfilePosts({ userId, viewerId }: ProfilePostsProps) {
+  const { items, nextCursor } = await profileClient.getProfilePosts({
+    userId,
+    viewerId: viewerId ?? undefined,
+  });
 
   if (items.length === 0) {
     return (
@@ -23,9 +27,9 @@ export async function ProfilePosts({ userId }: ProfilePostsProps) {
   return (
     <div className="flex flex-col gap-4">
       {items.map((post) => (
-        <FeedItem key={post.id} post={post} />
+        <FeedItem key={post.id} post={post} viewerId={viewerId} />
       ))}
-      <ProfileLoadMoreButton userId={userId} initialCursor={nextCursor} />
+      <ProfileLoadMoreButton userId={userId} viewerId={viewerId} initialCursor={nextCursor} />
     </div>
   );
 }

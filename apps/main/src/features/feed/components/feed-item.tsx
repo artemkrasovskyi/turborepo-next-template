@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import type { FeedPost } from '@repo/types/features/feed';
+import { LikeButton } from '@/features/likes/components/like-button';
 import { formatRelativeTime } from '../lib/format-relative-time';
 
 type FeedItemProps = {
   post: FeedPost;
+  viewerId: string | null;
 };
 
 function getInitials(displayName: string): string {
@@ -15,7 +17,7 @@ function getInitials(displayName: string): string {
     .join('');
 }
 
-export function FeedItem({ post }: FeedItemProps) {
+export function FeedItem({ post, viewerId }: FeedItemProps) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <Link href={`/profile/${post.author.username}`} className="flex items-center gap-3">
@@ -31,10 +33,18 @@ export function FeedItem({ post }: FeedItemProps) {
       </Link>
       <Link href={`/posts/${post.id}`} className="mt-3 block">
         <p className="whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
-        <p className="mt-3 text-sm text-slate-500 hover:underline">
-          {post.replyCount} {post.replyCount === 1 ? 'reply' : 'replies'}
-        </p>
       </Link>
+      <div className="mt-3 flex items-center gap-4">
+        <Link href={`/posts/${post.id}`} className="text-sm text-slate-500 hover:underline">
+          {post.replyCount} {post.replyCount === 1 ? 'reply' : 'replies'}
+        </Link>
+        <LikeButton
+          viewerId={viewerId}
+          postId={post.id}
+          initialIsLiked={post.isLikedByViewer}
+          initialLikeCount={post.likeCount}
+        />
+      </div>
     </article>
   );
 }

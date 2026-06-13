@@ -8,6 +8,7 @@ const profileClient = createProfileClient();
 export async function loadMoreProfilePostsAction(
   userId: string,
   cursor: string,
+  viewerId?: string | undefined,
 ): Promise<FeedPage> {
-  return profileClient.getProfilePosts({ userId, cursor });
+  return profileClient.getProfilePosts({ userId, viewerId, cursor });
 }

@@ -7,6 +7,7 @@ const MAX_PAGE_SIZE = 20;
 
 type GetProfilePostsParams = {
   userId: string;
+  viewerId?: string | undefined;
   cursor?: string;
   limit?: number;
 };
@@ -51,7 +52,12 @@ export function createProfileClient() {
       };
     },
 
-    async getProfilePosts({ userId, cursor, limit }: GetProfilePostsParams): Promise<FeedPage> {
+    async getProfilePosts({
+      userId,
+      viewerId,
+      cursor,
+      limit,
+    }: GetProfilePostsParams): Promise<FeedPage> {
       const pageSize = Math.min(limit ?? DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
 
       const posts = await prisma.post.findMany({
@@ -72,7 +78,12 @@ export function createProfileClient() {
             },
           },
           _count: {
-            select: { replies: true },
+            select: { replies: true, likes: true },
+          },
+          likes: {
+            where: { userId: viewerId ?? '' },
+            select: { userId: true },
+            take: 1,
           },
         },
       });
@@ -87,6 +98,8 @@ export function createProfileClient() {
           createdAt: post.createdAt.toISOString(),
           author: post.author,
           replyCount: post._count.replies,
+          likeCount: post._count.likes,
+          isLikedByViewer: post.likes.length > 0,
         })),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.id ?? null) : null,
       };

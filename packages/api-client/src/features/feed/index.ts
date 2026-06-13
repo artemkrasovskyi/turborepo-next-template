@@ -40,7 +40,12 @@ export function createFeedClient() {
             },
           },
           _count: {
-            select: { replies: true },
+            select: { replies: true, likes: true },
+          },
+          likes: {
+            where: { userId: viewerId },
+            select: { userId: true },
+            take: 1,
           },
         },
       });
@@ -55,6 +60,8 @@ export function createFeedClient() {
           createdAt: post.createdAt.toISOString(),
           author: post.author,
           replyCount: post._count.replies,
+          likeCount: post._count.likes,
+          isLikedByViewer: post.likes.length > 0,
         })),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.id ?? null) : null,
       };

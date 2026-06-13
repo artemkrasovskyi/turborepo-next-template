@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createUsersClient } from '@repo/api-client/features/users';
 import { FeedList } from '@/features/feed/components/feed-list';
 import { PostComposer } from '@/features/post-composer/components/post-composer';
@@ -28,11 +29,16 @@ export default async function Page() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12">
-      <header>
-        <h1 className="text-2xl font-semibold text-slate-950">Home</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Posts from people you follow, and your own posts.
-        </p>
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-950">Home</h1>
+          <p className="mt-1 text-sm text-slate-600">
+            Posts from people you follow, and your own posts.
+          </p>
+        </div>
+        <Link href="/notifications" className="text-sm font-semibold text-teal-700 hover:underline">
+          Notifications
+        </Link>
       </header>
       <PostComposer authorId={viewer.id} />
       <FeedList viewerId={viewer.id} />

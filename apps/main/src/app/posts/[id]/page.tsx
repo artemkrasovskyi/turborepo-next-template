@@ -15,10 +15,8 @@ type ThreadPageProps = {
 export default async function ThreadPage({ params }: ThreadPageProps) {
   const { id } = await params;
 
-  const [viewer, thread] = await Promise.all([
-    usersClient.getViewerUser(),
-    postsClient.getThread({ postId: id }),
-  ]);
+  const viewer = await usersClient.getViewerUser();
+  const thread = await postsClient.getThread({ postId: id, viewerId: viewer?.id });
 
   if (!thread) {
     return (
@@ -35,12 +33,14 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12">
-      <PostCard post={thread.root} />
+      <PostCard post={thread.root} viewerId={viewer?.id ?? null} />
       {viewer ? <ReplyComposer authorId={viewer.id} parentId={thread.root.id} /> : null}
       {thread.replies.length === 0 ? (
         <p className="text-sm text-slate-600">No replies yet.</p>
       ) : (
-        thread.replies.map((reply) => <PostCard key={reply.id} post={reply} />)
+        thread.replies.map((reply) => (
+          <PostCard key={reply.id} post={reply} viewerId={viewer?.id ?? null} />
+        ))
       )}
     </main>
   );

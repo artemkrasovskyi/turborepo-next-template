@@ -7,12 +7,17 @@ type FollowParams = {
 
 export function createFollowClient() {
   return {
-    async follow({ followerId, followingId }: FollowParams): Promise<void> {
-      await prisma.follow.upsert({
+    async follow({ followerId, followingId }: FollowParams): Promise<{ created: boolean }> {
+      const existing = await prisma.follow.findUnique({
         where: { followerId_followingId: { followerId, followingId } },
-        create: { followerId, followingId },
-        update: {},
       });
+
+      if (existing) {
+        return { created: false };
+      }
+
+      await prisma.follow.create({ data: { followerId, followingId } });
+      return { created: true };
     },
 
     async unfollow({ followerId, followingId }: FollowParams): Promise<void> {

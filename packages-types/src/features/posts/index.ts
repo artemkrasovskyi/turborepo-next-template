@@ -17,6 +17,8 @@ export type ThreadPost = {
   body: string;
   createdAt: string;
   author: PostAuthor;
+  likeCount: number;
+  isLikedByViewer: boolean;
 };
 
 export type ThreadPage = {

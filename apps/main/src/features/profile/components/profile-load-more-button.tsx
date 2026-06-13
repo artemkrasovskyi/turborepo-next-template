@@ -7,10 +7,15 @@ import { loadMoreProfilePostsAction } from '../actions';
 
 type ProfileLoadMoreButtonProps = {
   userId: string;
+  viewerId: string | null;
   initialCursor: string | null;
 };
 
-export function ProfileLoadMoreButton({ userId, initialCursor }: ProfileLoadMoreButtonProps) {
+export function ProfileLoadMoreButton({
+  userId,
+  viewerId,
+  initialCursor,
+}: ProfileLoadMoreButtonProps) {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +34,7 @@ export function ProfileLoadMoreButton({ userId, initialCursor }: ProfileLoadMore
 
     startTransition(async () => {
       try {
-        const page = await loadMoreProfilePostsAction(userId, cursor);
+        const page = await loadMoreProfilePostsAction(userId, cursor, viewerId ?? undefined);
         setItems((current) => [...current, ...page.items]);
         setCursor(page.nextCursor);
       } catch {
@@ -41,7 +46,7 @@ export function ProfileLoadMoreButton({ userId, initialCursor }: ProfileLoadMore
   return (
     <>
       {items.map((post) => (
-        <FeedItem key={post.id} post={post} />
+        <FeedItem key={post.id} post={post} viewerId={viewerId} />
       ))}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {cursor !== null ? (

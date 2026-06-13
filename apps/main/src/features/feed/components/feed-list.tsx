@@ -23,7 +23,7 @@ export async function FeedList({ viewerId }: FeedListProps) {
   return (
     <div className="flex flex-col gap-4">
       {items.map((post) => (
-        <FeedItem key={post.id} post={post} />
+        <FeedItem key={post.id} post={post} viewerId={viewerId} />
       ))}
       <LoadMoreButton viewerId={viewerId} initialCursor={nextCursor} />
     </div>

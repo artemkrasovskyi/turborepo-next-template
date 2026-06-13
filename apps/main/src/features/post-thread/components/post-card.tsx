@@ -1,8 +1,10 @@
 import type { ThreadPost } from '@repo/types/features/posts';
+import { LikeButton } from '@/features/likes/components/like-button';
 import { formatRelativeTime } from '../lib/format-relative-time';
 
 type PostCardProps = {
   post: ThreadPost;
+  viewerId: string | null;
 };
 
 function getInitials(displayName: string): string {
@@ -14,7 +16,7 @@ function getInitials(displayName: string): string {
     .join('');
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, viewerId }: PostCardProps) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-3">
@@ -29,6 +31,14 @@ export function PostCard({ post }: PostCardProps) {
         </div>
       </div>
       <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
+      <div className="mt-3">
+        <LikeButton
+          viewerId={viewerId}
+          postId={post.id}
+          initialIsLiked={post.isLikedByViewer}
+          initialLikeCount={post.likeCount}
+        />
+      </div>
     </article>
   );
 }

@@ -1,17 +1,20 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import type { FeedPost } from '@repo/types/features/feed';
-import { loadMoreFeedAction } from '../actions';
-import { FeedItem } from './feed-item';
+import type { NotificationItem as NotificationItemData } from '@repo/types/features/notifications';
+import { NotificationItem } from './notification-item';
+import { loadMoreNotificationsAction } from '../actions';
 
-type LoadMoreButtonProps = {
-  viewerId: string;
+type NotificationLoadMoreButtonProps = {
+  userId: string;
   initialCursor: string | null;
 };
 
-export function LoadMoreButton({ viewerId, initialCursor }: LoadMoreButtonProps) {
-  const [items, setItems] = useState<FeedPost[]>([]);
+export function NotificationLoadMoreButton({
+  userId,
+  initialCursor,
+}: NotificationLoadMoreButtonProps) {
+  const [items, setItems] = useState<NotificationItemData[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -29,19 +32,19 @@ export function LoadMoreButton({ viewerId, initialCursor }: LoadMoreButtonProps)
 
     startTransition(async () => {
       try {
-        const page = await loadMoreFeedAction(viewerId, cursor);
+        const page = await loadMoreNotificationsAction(userId, cursor);
         setItems((current) => [...current, ...page.items]);
         setCursor(page.nextCursor);
       } catch {
-        setError('Could not load more posts. Please try again.');
+        setError('Could not load more notifications. Please try again.');
       }
     });
   }
 
   return (
     <>
-      {items.map((post) => (
-        <FeedItem key={post.id} post={post} viewerId={viewerId} />
+      {items.map((notification) => (
+        <NotificationItem key={notification.id} notification={notification} />
       ))}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {cursor !== null ? (

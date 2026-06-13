@@ -22,10 +22,22 @@ export function createPostsClient() {
       });
     },
 
-    async getThread({ postId }: { postId: string }): Promise<ThreadPage | null> {
+    async getThread({
+      postId,
+      viewerId,
+    }: {
+      postId: string;
+      viewerId?: string | undefined;
+    }): Promise<ThreadPage | null> {
+      const include = {
+        author: { select: AUTHOR_SELECT },
+        _count: { select: { likes: true } },
+        likes: { where: { userId: viewerId ?? '' }, select: { userId: true }, take: 1 },
+      } as const;
+
       const root = await prisma.post.findFirst({
         where: { id: postId, parentId: null },
-        include: { author: { select: AUTHOR_SELECT } },
+        include,
       });
 
       if (!root) {
@@ -35,7 +47,7 @@ export function createPostsClient() {
       const replies = await prisma.post.findMany({
         where: { parentId: postId },
         orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-        include: { author: { select: AUTHOR_SELECT } },
+        include,
       });
 
       const toThreadPost = (post: typeof root): ThreadPost => ({
@@ -43,6 +55,8 @@ export function createPostsClient() {
         body: post.body,
         createdAt: post.createdAt.toISOString(),
         author: post.author,
+        likeCount: post._count.likes,
+        isLikedByViewer: post.likes.length > 0,
       });
 
       return { root: toThreadPost(root), replies: replies.map(toThreadPost) };

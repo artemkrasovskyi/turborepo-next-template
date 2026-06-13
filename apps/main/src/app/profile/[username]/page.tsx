@@ -33,7 +33,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12">
       <ProfileHeader profile={profile} viewerId={viewer?.id ?? null} />
-      <ProfilePosts userId={profile.id} />
+      <ProfilePosts userId={profile.id} viewerId={viewer?.id ?? null} />
     </main>
   );
 }

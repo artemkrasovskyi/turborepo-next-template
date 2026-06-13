@@ -11,6 +11,8 @@ export type FeedPost = {
   createdAt: string;
   author: FeedAuthor;
   replyCount: number;
+  likeCount: number;
+  isLikedByViewer: boolean;
 };
 
 export type FeedPage = {
