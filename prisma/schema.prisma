@@ -33,6 +33,7 @@ model Post {
   replies Post[] @relation("PostReplies")
 
   @@index([authorId, createdAt])
+  @@index([parentId, createdAt])
 }
 
 model Follow {

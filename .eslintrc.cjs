@@ -18,6 +18,17 @@ module.exports = {
   rules: {
     'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
     'import/prefer-default-export': 'off',
+    'no-underscore-dangle': [
+      'error',
+      {
+        allow: ['_count'],
+        allowAfterThis: false,
+        allowAfterSuper: false,
+        allowAfterThisConstructor: false,
+        enforceInMethodNames: true,
+        allowFunctionParams: true,
+      },
+    ],
     '@typescript-eslint/dot-notation': ['error', { allowIndexSignaturePropertyAccess: true }],
     'react/function-component-definition': [
       'error',

@@ -1,31 +1,55 @@
 import { prisma } from '@repo/shared/features/database';
+import type { ProfileUser } from '@repo/types/features/profile';
 import type { FeedPage } from '@repo/types/features/feed';
 
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 20;
 
-type GetHomeFeedParams = {
-  viewerId: string;
+type GetProfilePostsParams = {
+  userId: string;
   cursor?: string;
   limit?: number;
 };
 
-export function createFeedClient() {
+export function createProfileClient() {
   return {
-    async getHomeFeed({ viewerId, cursor, limit }: GetHomeFeedParams): Promise<FeedPage> {
-      const pageSize = Math.min(limit ?? DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
-
-      const follows = await prisma.follow.findMany({
-        where: { followerId: viewerId },
-        select: { followingId: true },
+    async getProfileByUsername(username: string): Promise<ProfileUser | null> {
+      const user = await prisma.user.findUnique({
+        where: { username },
+        select: {
+          id: true,
+          username: true,
+          displayName: true,
+          bio: true,
+          avatarUrl: true,
+          createdAt: true,
+          _count: { select: { followers: true, following: true } },
+        },
       });
 
-      const authorIds = [...follows.map((follow) => follow.followingId), viewerId];
+      if (!user) {
+        return null;
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        bio: user.bio,
+        avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt.toISOString(),
+        followerCount: user._count.followers,
+        followingCount: user._count.following,
+      };
+    },
+
+    async getProfilePosts({ userId, cursor, limit }: GetProfilePostsParams): Promise<FeedPage> {
+      const pageSize = Math.min(limit ?? DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
 
       const posts = await prisma.post.findMany({
         where: {
           parentId: null,
-          authorId: { in: authorIds },
+          authorId: userId,
         },
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: pageSize + 1,

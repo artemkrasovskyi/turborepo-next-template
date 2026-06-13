@@ -1,9 +1,8 @@
-import Link from 'next/link';
-import type { FeedPost } from '@repo/types/features/feed';
+import type { ThreadPost } from '@repo/types/features/posts';
 import { formatRelativeTime } from '../lib/format-relative-time';
 
-type FeedItemProps = {
-  post: FeedPost;
+type PostCardProps = {
+  post: ThreadPost;
 };
 
 function getInitials(displayName: string): string {
@@ -15,26 +14,21 @@ function getInitials(displayName: string): string {
     .join('');
 }
 
-export function FeedItem({ post }: FeedItemProps) {
+export function PostCard({ post }: PostCardProps) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-      <Link href={`/profile/${post.author.username}`} className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
           {getInitials(post.author.displayName)}
         </div>
         <div>
-          <p className="font-semibold text-slate-950 hover:underline">{post.author.displayName}</p>
+          <p className="font-semibold text-slate-950">{post.author.displayName}</p>
           <p className="text-sm text-slate-500">
             @{post.author.username} · {formatRelativeTime(post.createdAt)}
           </p>
         </div>
-      </Link>
-      <Link href={`/posts/${post.id}`} className="mt-3 block">
-        <p className="whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
-        <p className="mt-3 text-sm text-slate-500 hover:underline">
-          {post.replyCount} {post.replyCount === 1 ? 'reply' : 'replies'}
-        </p>
-      </Link>
+      </div>
+      <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
     </article>
   );
 }

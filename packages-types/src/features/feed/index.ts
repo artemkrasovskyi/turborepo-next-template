@@ -10,6 +10,7 @@ export type FeedPost = {
   body: string;
   createdAt: string;
   author: FeedAuthor;
+  replyCount: number;
 };
 
 export type FeedPage = {
