@@ -10,7 +10,12 @@ type LikeButtonProps = {
   initialLikeCount: number;
 };
 
-export function LikeButton({ viewerId, postId, initialIsLiked, initialLikeCount }: LikeButtonProps) {
+export function LikeButton({
+  viewerId,
+  postId,
+  initialIsLiked,
+  initialLikeCount,
+}: LikeButtonProps) {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +24,8 @@ export function LikeButton({ viewerId, postId, initialIsLiked, initialLikeCount 
   if (viewerId === null) {
     return (
       <span className="text-sm text-slate-500">
-        {isLiked ? '♥' : '♡'} {likeCount}
+        <span aria-hidden="true">{isLiked ? '♥' : '♡'}</span> {likeCount}
+        <span className="sr-only"> likes</span>
       </span>
     );
   }
@@ -49,15 +55,21 @@ export function LikeButton({ viewerId, postId, initialIsLiked, initialLikeCount 
         type="button"
         onClick={handleClick}
         disabled={isPending}
+        aria-pressed={isLiked}
+        aria-label={`${isLiked ? 'Unlike' : 'Like'} this post, ${likeCount} likes`}
         className={
           isLiked
-            ? 'text-sm text-rose-600 disabled:opacity-50'
-            : 'text-sm text-slate-500 hover:text-rose-600 disabled:opacity-50'
+            ? 'focus-ring rounded text-sm text-rose-600 disabled:opacity-50'
+            : 'focus-ring rounded text-sm text-slate-500 hover:text-rose-600 disabled:opacity-50'
         }
       >
-        {isLiked ? '♥' : '♡'} {likeCount}
+        <span aria-hidden="true">{isLiked ? '♥' : '♡'}</span> {likeCount}
       </button>
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error ? (
+        <p className="mt-2 text-sm text-red-600" role="status">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

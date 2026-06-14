@@ -19,9 +19,11 @@
   },
   "dependencies": {
     "@repo/shared": "workspace:*",
-    "@repo/types": "workspace:*"
+    "@repo/types": "workspace:*",
+    "react": "^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1"
+    "@types/node": "^22.10.1",
+    "@types/react": "^19.0.1"
   }
 }

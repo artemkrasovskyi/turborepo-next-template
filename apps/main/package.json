@@ -6,7 +6,8 @@
     "dev": "next dev --port 3000",
     "lint": "next lint",
     "stylelint": "stylelint \"src/**/*.{css,scss}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@repo/api-client": "workspace:*",
@@ -17,9 +18,15 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
-    "autoprefixer": "^10.4.20"
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^25.0.1",
+    "vitest": "^2.1.8"
   }
 }

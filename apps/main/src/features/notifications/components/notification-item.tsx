@@ -28,7 +28,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   return (
     <Link
       href={href}
-      className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50"
+      className="focus-ring flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50"
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
         {getInitials(actor.displayName)}
@@ -40,7 +40,9 @@ export function NotificationItem({ notification }: NotificationItemProps) {
           {type === 'FOLLOW' ? 'started following you' : 'liked your post'}
         </p>
         {type === 'LIKE' && post ? (
-          <p className="mt-1 text-sm text-slate-500">“{truncate(post.body, POST_SNIPPET_LENGTH)}”</p>
+          <p className="mt-1 text-sm text-slate-500">
+            “{truncate(post.body, POST_SNIPPET_LENGTH)}”
+          </p>
         ) : null}
         <p className="mt-1 text-sm text-slate-500">{formatRelativeTime(createdAt)}</p>
       </div>

@@ -10,6 +10,7 @@
     "format:check": "prettier --check .",
     "stylelint": "turbo stylelint",
     "typecheck": "turbo typecheck",
+    "test": "turbo test",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
@@ -43,7 +44,8 @@
     "stylelint-config-standard": "^36.0.1",
     "tailwindcss": "^3.4.15",
     "turbo": "^2.3.3",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.35.0",

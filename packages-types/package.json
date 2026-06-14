@@ -15,6 +15,10 @@
     "build": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\"",
     "stylelint": "stylelint \"src/**/*.{css,scss}\" --allow-empty-input",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
   }
 }

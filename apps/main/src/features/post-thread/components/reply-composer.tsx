@@ -54,12 +54,16 @@ export function ReplyComposer({ authorId, parentId }: ReplyComposerProps) {
           type="button"
           onClick={handleSubmit}
           disabled={isDisabled}
-          className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
+          className="focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
         >
           {isPending ? 'Replying…' : 'Reply'}
         </button>
       </div>
-      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
+      {error ? (
+        <p className="mt-2 text-sm text-red-600" role="status">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

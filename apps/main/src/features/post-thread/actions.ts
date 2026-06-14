@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createPostsClient } from '@repo/api-client/features/posts';
-import { MAX_POST_LENGTH } from '@repo/types/features/posts';
+import { validatePostBody } from '@repo/types/features/posts';
 
 const postsClient = createPostsClient();
 
@@ -15,17 +15,13 @@ export async function createReplyAction(
   parentId: string,
   body: string,
 ): Promise<CreateReplyResult> {
-  const trimmed = body.trim();
+  const result = validatePostBody(body, 'Reply');
 
-  if (trimmed.length === 0) {
-    return { error: 'Reply cannot be empty.' };
+  if (result.error !== undefined) {
+    return { error: result.error };
   }
 
-  if (trimmed.length > MAX_POST_LENGTH) {
-    return { error: `Reply must be ${MAX_POST_LENGTH} characters or fewer.` };
-  }
-
-  const reply = await postsClient.createReply({ authorId, parentId, body: trimmed });
+  const reply = await postsClient.createReply({ authorId, parentId, body: result.trimmed });
   revalidatePath(`/posts/${parentId}`);
   return { id: reply.id };
 }

@@ -15,6 +15,7 @@
     "stylelint": {},
     "typecheck": {
       "dependsOn": ["^build"]
-    }
+    },
+    "test": {}
   }
 }

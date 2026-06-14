@@ -1,4 +1,5 @@
 import { createFeedClient } from '@repo/api-client/features/feed';
+import { EmptyState } from '@/features/ui/components/empty-state';
 import { FeedItem } from './feed-item';
 import { LoadMoreButton } from './load-more-button';
 
@@ -13,10 +14,10 @@ export async function FeedList({ viewerId }: FeedListProps) {
 
   if (items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-        <h2 className="text-lg font-semibold text-slate-950">Your feed is empty</h2>
-        <p className="mt-2 text-sm text-slate-600">Follow other people to see their posts here.</p>
-      </div>
+      <EmptyState
+        heading="Your feed is empty"
+        description="Follow other people to see their posts here."
+      />
     );
   }
 

@@ -2,6 +2,7 @@ import { createPostsClient } from '@repo/api-client/features/posts';
 import { createUsersClient } from '@repo/api-client/features/users';
 import { PostCard } from '@/features/post-thread/components/post-card';
 import { ReplyComposer } from '@/features/post-thread/components/reply-composer';
+import { EmptyState } from '@/features/ui/components/empty-state';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,23 +21,21 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
 
   if (!thread) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12">
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-          <h1 className="text-lg font-semibold text-slate-950">Post not found</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            This post doesn&apos;t exist or was removed.
-          </p>
-        </div>
+      <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
+        <EmptyState
+          heading="Post not found"
+          description="This post doesn't exist or was removed."
+        />
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12">
+    <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12 md:max-w-3xl">
       <PostCard post={thread.root} viewerId={viewer?.id ?? null} />
       {viewer ? <ReplyComposer authorId={viewer.id} parentId={thread.root.id} /> : null}
       {thread.replies.length === 0 ? (
-        <p className="text-sm text-slate-600">No replies yet.</p>
+        <EmptyState heading="No replies yet" description="Be the first to reply to this post." />
       ) : (
         thread.replies.map((reply) => (
           <PostCard key={reply.id} post={reply} viewerId={viewer?.id ?? null} />
