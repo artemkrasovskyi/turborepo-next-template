@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import type { ProfileUser } from '@repo/types/features/profile';
 import { FollowButton } from '@/features/follow/components/follow-button';
+import { ProfileTabs } from './profile-tabs';
 
 type ProfileHeaderProps = {
   profile: ProfileUser;
@@ -43,12 +45,21 @@ export function ProfileHeader({ profile, viewerId }: ProfileHeaderProps) {
         Joined {joinDateFormatter.format(new Date(profile.createdAt))}
       </p>
       <div className="mt-3 flex gap-4 text-sm text-slate-700">
-        <span>
+        <Link
+          href={`/profile/${profile.username}/following`}
+          className="focus-ring rounded hover:underline"
+        >
           <span className="font-semibold text-slate-950">{profile.followingCount}</span> Following
-        </span>
-        <span>
+        </Link>
+        <Link
+          href={`/profile/${profile.username}/followers`}
+          className="focus-ring rounded hover:underline"
+        >
           <span className="font-semibold text-slate-950">{profile.followerCount}</span> Followers
-        </span>
+        </Link>
+      </div>
+      <div className="mt-4">
+        <ProfileTabs username={profile.username} />
       </div>
     </header>
   );

@@ -26,8 +26,6 @@ Each change should contain:
 - design.md
 - tasks.md
 
-Additional spec files are optional when requirements are complex.
-
 Implementation must not begin until design and tasks are reviewed.
 
 After a feature is completed and accepted:
