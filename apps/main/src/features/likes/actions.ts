@@ -2,6 +2,7 @@
 
 import { createLikesClient } from '@repo/api-client/features/likes';
 import { createNotificationsClient } from '@repo/api-client/features/notifications';
+import type { FeedPage } from '@repo/types/features/feed';
 import type { ToggleLikeResult } from '@repo/types/features/likes';
 
 const likesClient = createLikesClient();
@@ -22,4 +23,12 @@ export async function toggleLikeAction(
   }
 
   return { isLiked: nextIsLiked };
+}
+
+export async function loadMoreLikedPostsAction(
+  userId: string,
+  cursor: string,
+  viewerId?: string,
+): Promise<FeedPage> {
+  return likesClient.getLikedPosts({ userId, cursor, ...(viewerId ? { viewerId } : {}) });
 }

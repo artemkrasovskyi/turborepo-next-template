@@ -1,9 +1,20 @@
 import { prisma } from '@repo/shared/features/database';
+import type { FeedPage } from '@repo/types/features/feed';
 
 type LikeParams = {
   userId: string;
   postId: string;
 };
+
+type GetLikedPostsParams = {
+  userId: string;
+  viewerId?: string;
+  cursor?: string;
+  limit?: number;
+};
+
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 20;
 
 export function createLikesClient() {
   return {
@@ -24,6 +35,57 @@ export function createLikesClient() {
       await prisma.like.deleteMany({
         where: { userId, postId },
       });
+    },
+
+    async getLikedPosts({ userId, viewerId, cursor, limit }: GetLikedPostsParams): Promise<FeedPage> {
+      const pageSize = Math.min(limit ?? DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
+
+      const likes = await prisma.like.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take: pageSize + 1,
+        ...(cursor
+          ? { cursor: { userId_postId: { userId, postId: cursor } }, skip: 1 }
+          : {}),
+        include: {
+          post: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  displayName: true,
+                  avatarUrl: true,
+                },
+              },
+              _count: {
+                select: { replies: true, likes: true },
+              },
+              likes: {
+                where: { userId: viewerId ?? '' },
+                select: { userId: true },
+                take: 1,
+              },
+            },
+          },
+        },
+      });
+
+      const hasMore = likes.length > pageSize;
+      const pageItems = hasMore ? likes.slice(0, pageSize) : likes;
+
+      return {
+        items: pageItems.map(({ post }) => ({
+          id: post.id,
+          body: post.body,
+          createdAt: post.createdAt.toISOString(),
+          author: post.author,
+          replyCount: post._count.replies,
+          likeCount: post._count.likes,
+          isLikedByViewer: post.likes.length > 0,
+        })),
+        nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.post.id ?? null) : null,
+      };
     },
   };
 }
