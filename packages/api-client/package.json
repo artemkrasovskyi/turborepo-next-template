@@ -9,6 +9,7 @@
     "./features/notifications": "./src/features/notifications/index.ts",
     "./features/posts": "./src/features/posts/index.ts",
     "./features/profile": "./src/features/profile/index.ts",
+    "./features/search": "./src/features/search/index.ts",
     "./features/users": "./src/features/users/index.ts"
   },
   "scripts": {

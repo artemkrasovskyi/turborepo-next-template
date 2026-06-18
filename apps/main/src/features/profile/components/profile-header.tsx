@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import type { ProfileUser } from '@repo/types/features/profile';
 import { FollowButton } from '@/features/follow/components/follow-button';
+import { EditProfileButton } from './edit-profile-button';
 import { ProfileTabs } from './profile-tabs';
 
 type ProfileHeaderProps = {
   profile: ProfileUser;
   viewerId: string | null;
+  isOwnProfile: boolean;
 };
 
 function getInitials(displayName: string): string {
@@ -19,18 +21,34 @@ function getInitials(displayName: string): string {
 
 const joinDateFormatter = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' });
 
-export function ProfileHeader({ profile, viewerId }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeaderProps) {
   return (
     <header className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-teal-600 text-xl font-semibold text-white">
-          {getInitials(profile.displayName)}
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-teal-600 text-xl font-semibold text-white">
+          {profile.avatarUrl ? (
+            <img
+              src={profile.avatarUrl}
+              alt={profile.displayName}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            getInitials(profile.displayName)
+          )}
         </div>
         <div className="flex-1">
           <p className="text-lg font-semibold text-slate-950">{profile.displayName}</p>
           <p className="text-sm text-slate-500">@{profile.username}</p>
         </div>
-        {viewerId ? (
+        {isOwnProfile ? (
+          <EditProfileButton
+            userId={profile.id}
+            username={profile.username}
+            displayName={profile.displayName}
+            bio={profile.bio}
+            avatarUrl={profile.avatarUrl}
+          />
+        ) : viewerId ? (
           <FollowButton
             viewerId={viewerId}
             targetUserId={profile.id}

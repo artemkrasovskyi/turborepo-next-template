@@ -23,6 +23,10 @@ export function NavBar({ viewer }: NavBarProps) {
           <span aria-hidden="true">🏠</span>
           <span>Home</span>
         </Link>
+        <Link href="/explore" className={linkClasses}>
+          <span aria-hidden="true">🔍</span>
+          <span>Explore</span>
+        </Link>
         <Link href="/notifications" className={linkClasses}>
           <span aria-hidden="true">🔔</span>
           <span>Notifications</span>

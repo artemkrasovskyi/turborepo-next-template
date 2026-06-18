@@ -31,7 +31,11 @@ export default async function LikesPage({ params }: LikesPageProps) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-      <ProfileHeader profile={profile} viewerId={viewer?.id ?? null} />
+      <ProfileHeader
+        profile={profile}
+        viewerId={viewer?.id ?? null}
+        isOwnProfile={viewer?.id === profile.id}
+      />
       <LikedPosts userId={profile.id} viewerId={viewer?.id ?? null} />
     </main>
   );

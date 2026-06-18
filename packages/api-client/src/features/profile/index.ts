@@ -1,5 +1,5 @@
 import { prisma } from '@repo/shared/features/database';
-import type { ProfileUser } from '@repo/types/features/profile';
+import type { ProfileUser, UpdateProfileInput } from '@repo/types/features/profile';
 import type { FeedPage } from '@repo/types/features/feed';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -102,6 +102,39 @@ export function createProfileClient() {
           isLikedByViewer: post.likes.length > 0,
         })),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.id ?? null) : null,
+      };
+    },
+
+    async updateProfile({
+      userId,
+      displayName,
+      bio,
+      avatarUrl,
+    }: UpdateProfileInput): Promise<ProfileUser> {
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data: { displayName, bio, avatarUrl },
+        select: {
+          id: true,
+          username: true,
+          displayName: true,
+          bio: true,
+          avatarUrl: true,
+          createdAt: true,
+          _count: { select: { followers: true, following: true } },
+        },
+      });
+
+      return {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        bio: user.bio,
+        avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt.toISOString(),
+        followerCount: user._count.followers,
+        followingCount: user._count.following,
+        isFollowing: false,
       };
     },
   };
