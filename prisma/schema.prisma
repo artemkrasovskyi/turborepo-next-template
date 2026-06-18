@@ -19,6 +19,7 @@ model User {
   following             Follow[]       @relation("Follower")
   followers             Follow[]       @relation("Following")
   likes                 Like[]
+  reposts               Repost[]
   notificationsReceived Notification[] @relation("NotificationRecipient")
   notificationsSent     Notification[] @relation("NotificationActor")
 }
@@ -35,6 +36,7 @@ model Post {
   parent        Post?          @relation("PostReplies", fields: [parentId], references: [id])
   replies       Post[]         @relation("PostReplies")
   likes         Like[]
+  reposts       Repost[]
   notifications Notification[]
 
   @@index([authorId, createdAt])
@@ -53,6 +55,18 @@ model Follow {
 }
 
 model Like {
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+  @@index([postId])
+}
+
+model Repost {
   userId    String
   postId    String
   createdAt DateTime @default(now())

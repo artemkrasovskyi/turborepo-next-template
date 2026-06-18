@@ -1,7 +1,7 @@
 ## 1. Prisma Schema
 
-- [ ] 1.1 Add `Repost` model to `prisma/schema.prisma` — fields: `userId`, `postId`, `createdAt @default(now())`, relations to `User` and `Post`, `@@id([userId, postId])`, `@@index([postId])`
-- [ ] 1.2 Add `reposts` back-relation to the `Post` model and `reposts` back-relation to the `User` model in `schema.prisma`
+- [x] 1.1 Add `Repost` model to `prisma/schema.prisma` — fields: `userId`, `postId`, `createdAt @default(now())`, relations to `User` and `Post`, `@@id([userId, postId])`, `@@index([postId])`
+- [x] 1.2 Add `reposts` back-relation to the `Post` model and `reposts` back-relation to the `User` model in `schema.prisma`
 - [ ] 1.3 Run `bun run db:migrate` to create the migration
 - [ ] 1.4 Run `bun run db:generate` to regenerate Prisma Client
 
