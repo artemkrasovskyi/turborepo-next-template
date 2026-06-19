@@ -3,12 +3,16 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./features/bookmarks": "./src/features/bookmarks/index.ts",
+    "./features/direct-messages": "./src/features/direct-messages/index.ts",
     "./features/feed": "./src/features/feed/index.ts",
     "./features/follow": "./src/features/follow/index.ts",
     "./features/likes": "./src/features/likes/index.ts",
     "./features/notifications": "./src/features/notifications/index.ts",
     "./features/posts": "./src/features/posts/index.ts",
     "./features/profile": "./src/features/profile/index.ts",
+    "./features/recommendations": "./src/features/recommendations/index.ts",
+    "./features/reposts": "./src/features/reposts/index.ts",
     "./features/search": "./src/features/search/index.ts",
     "./features/users": "./src/features/users/index.ts"
   },
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
-    "@types/react": "^19.0.1"
+    "@types/react": "^19.0.1",
+    "vitest": "^2.1.8"
   }
 }

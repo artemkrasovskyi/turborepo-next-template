@@ -1,14 +1,16 @@
+import { createRecommendationsClient } from '@repo/api-client/features/recommendations';
 import { createSearchClient } from '@repo/api-client/features/search';
 import { createUsersClient } from '@repo/api-client/features/users';
+import { RecommendedPosts } from '@/features/recommendations/components/recommended-posts';
+import { SuggestedUsers } from '@/features/recommendations/components/suggested-users';
 import { SearchBar } from '@/features/search/components/search-bar';
 import { UserSearchResults } from '@/features/search/components/user-search-results';
-import { RecentUsers } from '@/features/search/components/recent-users';
-import { TrendingPosts } from '@/features/search/components/trending-posts';
 
 export const dynamic = 'force-dynamic';
 
 const searchClient = createSearchClient();
 const usersClient = createUsersClient();
+const recommendationsClient = createRecommendationsClient();
 
 type ExplorePageProps = {
   searchParams: Promise<{ q?: string }>;
@@ -28,18 +30,16 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         <h1 className="text-2xl font-semibold text-slate-950">Search</h1>
         <SearchBar defaultValue={query} />
         <section aria-label="Search results">
-          <p className="mb-4 text-sm text-slate-500">
-            Results for &ldquo;{query}&rdquo;
-          </p>
+          <p className="mb-4 text-sm text-slate-500">Results for &ldquo;{query}&rdquo;</p>
           <UserSearchResults query={query} initialPage={initialPage} viewerId={viewerId ?? null} />
         </section>
       </main>
     );
   }
 
-  const [recentUsers, trendingPosts] = await Promise.all([
-    searchClient.getRecentUsers({ viewerId }),
-    searchClient.getTrendingPosts({ viewerId }),
+  const [suggestedUsersPage, recommendedPostsPage] = await Promise.all([
+    recommendationsClient.getSuggestedUsers({ viewerId }),
+    recommendationsClient.getRecommendedPosts({ viewerId }),
   ]);
 
   return (
@@ -47,12 +47,12 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
       <h1 className="text-2xl font-semibold text-slate-950">Explore</h1>
       <SearchBar defaultValue="" />
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-slate-950">Recent users</h2>
-        <RecentUsers users={recentUsers} viewerId={viewerId ?? null} />
+        <h2 className="mb-4 text-lg font-semibold text-slate-950">Suggested users</h2>
+        <SuggestedUsers page={suggestedUsersPage} viewerId={viewerId ?? null} />
       </section>
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-slate-950">Trending this week</h2>
-        <TrendingPosts posts={trendingPosts} viewerId={viewerId ?? null} />
+        <h2 className="mb-4 text-lg font-semibold text-slate-950">Recommended posts</h2>
+        <RecommendedPosts page={recommendedPostsPage} viewerId={viewerId ?? null} />
       </section>
     </main>
   );
