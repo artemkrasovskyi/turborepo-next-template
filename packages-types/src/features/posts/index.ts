@@ -8,10 +8,11 @@ export function validatePostBody(
   body: string,
   kind: 'Post' | 'Reply' = 'Post',
   maxLength: number = MAX_POST_LENGTH,
+  imageCount = 0,
 ): ValidatePostBodyResult {
   const trimmed = body.trim();
 
-  if (trimmed.length === 0) {
+  if (trimmed.length === 0 && imageCount === 0) {
     return { error: `${kind} cannot be empty.` };
   }
 
@@ -22,9 +23,16 @@ export function validatePostBody(
   return { trimmed };
 }
 
+export type PostImage = {
+  id: string;
+  url: string;
+  order: number;
+};
+
 export type CreatePostInput = {
   authorId: string;
   body: string;
+  imageUrls?: string[];
 };
 
 export type PostAuthor = {
@@ -41,6 +49,8 @@ export type ThreadPost = {
   author: PostAuthor;
   likeCount: number;
   isLikedByViewer: boolean;
+  isBookmarkedByViewer: boolean;
+  images: PostImage[];
 };
 
 export type ThreadPage = {
@@ -52,4 +62,5 @@ export type CreateReplyInput = {
   authorId: string;
   parentId: string;
   body: string;
+  imageUrls?: string[];
 };

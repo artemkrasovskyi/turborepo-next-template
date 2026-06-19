@@ -14,14 +14,20 @@ export async function createReplyAction(
   authorId: string,
   parentId: string,
   body: string,
+  imageUrls: string[] = [],
 ): Promise<CreateReplyResult> {
-  const result = validatePostBody(body, 'Reply');
+  const result = validatePostBody(body, 'Reply', undefined, imageUrls.length);
 
   if (result.error !== undefined) {
     return { error: result.error };
   }
 
-  const reply = await postsClient.createReply({ authorId, parentId, body: result.trimmed });
+  const reply = await postsClient.createReply({
+    authorId,
+    parentId,
+    body: result.trimmed,
+    imageUrls,
+  });
   revalidatePath(`/posts/${parentId}`);
   return { id: reply.id };
 }

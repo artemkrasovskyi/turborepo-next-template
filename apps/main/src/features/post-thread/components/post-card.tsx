@@ -1,5 +1,7 @@
 import type { ThreadPost } from '@repo/types/features/posts';
+import { BookmarkButton } from '@/features/bookmarks/components/bookmark-button';
 import { LikeButton } from '@/features/likes/components/like-button';
+import { PostImageGrid } from '@/features/ui/components/post-image-grid';
 import { formatRelativeTime } from '../lib/format-relative-time';
 
 type PostCardProps = {
@@ -31,12 +33,18 @@ export function PostCard({ post, viewerId }: PostCardProps) {
         </div>
       </div>
       <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
-      <div className="mt-3">
+      {post.images.length > 0 ? <PostImageGrid images={post.images} /> : null}
+      <div className="mt-3 flex items-center gap-4">
         <LikeButton
           viewerId={viewerId}
           postId={post.id}
           initialIsLiked={post.isLikedByViewer}
           initialLikeCount={post.likeCount}
+        />
+        <BookmarkButton
+          viewerId={viewerId}
+          postId={post.id}
+          initialIsBookmarked={post.isBookmarkedByViewer}
         />
       </div>
     </article>

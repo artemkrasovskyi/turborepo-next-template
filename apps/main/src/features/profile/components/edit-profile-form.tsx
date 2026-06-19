@@ -59,47 +59,43 @@ export function EditProfileForm({
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <label htmlFor="display-name" className="mb-1 block text-sm font-medium text-slate-700">
-          Display name
-        </label>
+      <label htmlFor="edit-display-name" className="flex flex-col gap-1">
+        <span className="text-sm font-medium text-slate-700">Display name</span>
         <input
-          id="display-name"
+          id="edit-display-name"
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           maxLength={MAX_DISPLAY_NAME_LENGTH}
           className="w-full rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
         />
-      </div>
+      </label>
       <div>
-        <label htmlFor="bio" className="mb-1 block text-sm font-medium text-slate-700">
-          Bio
+        <label htmlFor="edit-bio" className="flex flex-col gap-1">
+          <span className="text-sm font-medium text-slate-700">Bio</span>
+          <textarea
+            id="edit-bio"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
+            className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+          />
         </label>
-        <textarea
-          id="bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          rows={3}
-          className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
-        />
         <p className={`mt-1 text-sm ${bioRemaining < 0 ? 'text-red-600' : 'text-slate-500'}`}>
           {bioRemaining} characters left
         </p>
       </div>
-      <div>
-        <label htmlFor="avatar-url" className="mb-1 block text-sm font-medium text-slate-700">
-          Avatar URL
-        </label>
+      <label htmlFor="edit-avatar-url" className="flex flex-col gap-1">
+        <span className="text-sm font-medium text-slate-700">Avatar URL</span>
         <input
-          id="avatar-url"
+          id="edit-avatar-url"
           type="url"
           value={avatarUrl}
           onChange={(e) => setAvatarUrl(e.target.value)}
           placeholder="https://example.com/avatar.png"
           className="w-full rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
         />
-      </div>
+      </label>
       {error ? (
         <p className="text-sm text-red-600" role="alert">
           {error}

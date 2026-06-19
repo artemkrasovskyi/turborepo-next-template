@@ -13,9 +13,11 @@
     "@repo/api-client": "workspace:*",
     "@repo/shared": "workspace:*",
     "@repo/types": "workspace:*",
+    "@uploadthing/react": "^7",
     "next": "^15.0.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uploadthing": "^7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",

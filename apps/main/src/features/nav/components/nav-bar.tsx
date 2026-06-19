@@ -35,6 +35,10 @@ export function NavBar({ viewer }: NavBarProps) {
           <span aria-hidden="true">✉</span>
           <span>Messages</span>
         </Link>
+        <Link href="/bookmarks" className={linkClasses}>
+          <span aria-hidden="true">★</span>
+          <span>Bookmarks</span>
+        </Link>
         <Link href={`/profile/${viewer.username}`} className={linkClasses}>
           <span aria-hidden="true">👤</span>
           <span>Profile</span>

@@ -26,6 +26,7 @@ Rules:
 - A user can follow many users.
 - A user can be followed by many users.
 - A user can like many posts.
+- A user can bookmark many posts.
 - A user can participate in many direct-message conversations.
 - A user can send many direct messages.
 
@@ -45,6 +46,7 @@ Attributes:
 Rules:
 - A post belongs to exactly one user.
 - A post may receive likes.
+- A post may be bookmarked by users.
 - A post may receive replies.
 - A post may appear in one or more feeds.
 - Posts are immutable from a conversation perspective. Editing is out of scope for MVP.
@@ -104,6 +106,23 @@ Rules:
 - A user may like a post only once.
 - A like belongs to exactly one user and one post.
 - Like counts are derived from Like relationships.
+
+---
+
+## Bookmark
+
+A bookmark represents a private saved-post relationship between a user and a post.
+
+Attributes:
+- userId
+- postId
+- createdAt
+
+Rules:
+- A user may bookmark a post only once.
+- A bookmark belongs to exactly one user and one post.
+- Bookmarks are private to the bookmarking user.
+- Bookmark counts are not exposed publicly in MVP.
 
 ---
 

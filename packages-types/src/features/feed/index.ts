@@ -1,3 +1,5 @@
+import type { PostImage } from '../posts';
+
 export type FeedAuthor = {
   id: string;
   username: string;
@@ -13,6 +15,11 @@ export type FeedPost = {
   replyCount: number;
   likeCount: number;
   isLikedByViewer: boolean;
+  repostCount: number;
+  isRepostedByViewer: boolean;
+  repostedBy?: FeedAuthor;
+  isBookmarkedByViewer: boolean;
+  images: PostImage[];
 };
 
 export type FeedPage = {

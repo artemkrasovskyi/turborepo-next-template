@@ -13,12 +13,30 @@ const AUTHOR_SELECT = {
   avatarUrl: true,
 } as const;
 
+const IMAGES_INCLUDE = {
+  select: { id: true, url: true, order: true },
+  orderBy: { order: 'asc' as const },
+};
+
 export function createPostsClient() {
   return {
-    async createPost({ authorId, body }: CreatePostInput): Promise<{ id: string }> {
-      return prisma.post.create({
-        data: { authorId, body, parentId: null },
-        select: { id: true },
+    async createPost({ authorId, body, imageUrls = [] }: CreatePostInput): Promise<{ id: string }> {
+      if (imageUrls.length === 0) {
+        return prisma.post.create({
+          data: { authorId, body, parentId: null },
+          select: { id: true },
+        });
+      }
+
+      return prisma.$transaction(async (tx) => {
+        const post = await tx.post.create({
+          data: { authorId, body, parentId: null },
+          select: { id: true },
+        });
+        await tx.postImage.createMany({
+          data: imageUrls.map((url, order) => ({ postId: post.id, url, order })),
+        });
+        return post;
       });
     },
 
@@ -33,6 +51,8 @@ export function createPostsClient() {
         author: { select: AUTHOR_SELECT },
         _count: { select: { likes: true } },
         likes: { where: { userId: viewerId ?? '' }, select: { userId: true }, take: 1 },
+        bookmarks: { where: { userId: viewerId ?? '' }, select: { userId: true }, take: 1 },
+        images: IMAGES_INCLUDE,
       } as const;
 
       const root = await prisma.post.findFirst({
@@ -57,15 +77,35 @@ export function createPostsClient() {
         author: post.author,
         likeCount: post._count.likes,
         isLikedByViewer: post.likes.length > 0,
+        isBookmarkedByViewer: post.bookmarks.length > 0,
+        images: post.images,
       });
 
       return { root: toThreadPost(root), replies: replies.map(toThreadPost) };
     },
 
-    async createReply({ authorId, parentId, body }: CreateReplyInput): Promise<{ id: string }> {
-      return prisma.post.create({
-        data: { authorId, parentId, body },
-        select: { id: true },
+    async createReply({
+      authorId,
+      parentId,
+      body,
+      imageUrls = [],
+    }: CreateReplyInput): Promise<{ id: string }> {
+      if (imageUrls.length === 0) {
+        return prisma.post.create({
+          data: { authorId, parentId, body },
+          select: { id: true },
+        });
+      }
+
+      return prisma.$transaction(async (tx) => {
+        const post = await tx.post.create({
+          data: { authorId, parentId, body },
+          select: { id: true },
+        });
+        await tx.postImage.createMany({
+          data: imageUrls.map((url, order) => ({ postId: post.id, url, order })),
+        });
+        return post;
       });
     },
   };

@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import type { FeedPost } from '@repo/types/features/feed';
+import { BookmarkButton } from '@/features/bookmarks/components/bookmark-button';
 import { LikeButton } from '@/features/likes/components/like-button';
+import { RepostButton } from '@/features/reposts/components/repost-button';
+import { PostImageGrid } from '@/features/ui/components/post-image-grid';
 import { formatRelativeTime } from '../lib/format-relative-time';
 
 type FeedItemProps = {
@@ -20,6 +23,15 @@ function getInitials(displayName: string): string {
 export function FeedItem({ post, viewerId }: FeedItemProps) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      {post.repostedBy ? (
+        <Link
+          href={`/profile/${post.repostedBy.username}`}
+          className="focus-ring mb-3 flex items-center gap-1 rounded text-xs text-slate-500 hover:text-slate-700"
+        >
+          <span aria-hidden="true">↻</span>
+          <span>{post.repostedBy.displayName} reposted</span>
+        </Link>
+      ) : null}
       <Link
         href={`/profile/${post.author.username}`}
         className="focus-ring flex items-center gap-3 rounded-lg"
@@ -37,6 +49,7 @@ export function FeedItem({ post, viewerId }: FeedItemProps) {
       <Link href={`/posts/${post.id}`} className="focus-ring mt-3 block rounded-lg">
         <p className="whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
       </Link>
+      {post.images.length > 0 ? <PostImageGrid images={post.images} /> : null}
       <div className="mt-3 flex items-center gap-4">
         <Link
           href={`/posts/${post.id}`}
@@ -44,11 +57,22 @@ export function FeedItem({ post, viewerId }: FeedItemProps) {
         >
           {post.replyCount} {post.replyCount === 1 ? 'reply' : 'replies'}
         </Link>
+        <RepostButton
+          viewerId={viewerId}
+          postId={post.id}
+          initialIsReposted={post.isRepostedByViewer}
+          initialRepostCount={post.repostCount}
+        />
         <LikeButton
           viewerId={viewerId}
           postId={post.id}
           initialIsLiked={post.isLikedByViewer}
           initialLikeCount={post.likeCount}
+        />
+        <BookmarkButton
+          viewerId={viewerId}
+          postId={post.id}
+          initialIsBookmarked={post.isBookmarkedByViewer}
         />
       </div>
     </article>

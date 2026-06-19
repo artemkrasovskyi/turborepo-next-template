@@ -48,7 +48,7 @@ describe('createPostAction', () => {
 
     const result = await createPostAction(AUTHOR_ID, '  hello world  ');
 
-    expect(createPost).toHaveBeenCalledWith({ authorId: AUTHOR_ID, body: 'hello world' });
+    expect(createPost).toHaveBeenCalledWith({ authorId: AUTHOR_ID, body: 'hello world', imageUrls: [] });
     expect(revalidatePath).toHaveBeenCalledWith('/');
     expect(result).toEqual({ id: 'post-1' });
   });

@@ -59,12 +59,26 @@ export function createLikesClient() {
                 },
               },
               _count: {
-                select: { replies: true, likes: true },
+                select: { replies: true, likes: true, reposts: true },
               },
               likes: {
                 where: { userId: viewerId ?? '' },
                 select: { userId: true },
                 take: 1,
+              },
+              reposts: {
+                where: { userId: viewerId ?? '' },
+                select: { userId: true },
+                take: 1,
+              },
+              bookmarks: {
+                where: { userId: viewerId ?? '' },
+                select: { userId: true },
+                take: 1,
+              },
+              images: {
+                select: { id: true, url: true, order: true },
+                orderBy: { order: 'asc' as const },
               },
             },
           },
@@ -83,6 +97,10 @@ export function createLikesClient() {
           replyCount: post._count.replies,
           likeCount: post._count.likes,
           isLikedByViewer: post.likes.length > 0,
+          repostCount: post._count.reposts,
+          isRepostedByViewer: post.reposts.length > 0,
+          isBookmarkedByViewer: post.bookmarks.length > 0,
+          images: post.images,
         })),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.post.id ?? null) : null,
       };

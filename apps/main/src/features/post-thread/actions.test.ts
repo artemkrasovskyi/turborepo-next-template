@@ -53,6 +53,7 @@ describe('createReplyAction', () => {
       authorId: AUTHOR_ID,
       parentId: PARENT_ID,
       body: 'hello world',
+      imageUrls: [],
     });
     expect(revalidatePath).toHaveBeenCalledWith(`/posts/${PARENT_ID}`);
     expect(result).toEqual({ id: 'reply-1' });
