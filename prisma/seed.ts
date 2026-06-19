@@ -1,15 +1,71 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from 'better-auth/crypto';
 
 const prisma = new PrismaClient();
+const DEMO_PASSWORD = 'password1234';
 
 function hoursAgo(hours: number): Date {
   return new Date(Date.now() - hours * 60 * 60 * 1000);
 }
 
 async function main() {
+  const demoPasswordHash = await hashPassword(DEMO_PASSWORD);
+
+  await prisma.notification.deleteMany();
+  await prisma.directMessage.deleteMany();
+  await prisma.conversationParticipant.deleteMany();
+  await prisma.conversation.deleteMany();
+  await prisma.bookmark.deleteMany();
+  await prisma.repost.deleteMany();
+  await prisma.like.deleteMany();
+  await prisma.follow.deleteMany();
+  await prisma.postImage.deleteMany();
+  await prisma.post.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.account.deleteMany();
+  await prisma.verification.deleteMany();
+  await prisma.user.deleteMany();
+
+  async function createSeedUser({
+    data,
+  }: {
+    data: {
+      username: string;
+      displayName: string;
+      bio?: string;
+      avatarUrl?: string;
+      createdAt: Date;
+    };
+  }) {
+    const { username, displayName, bio, avatarUrl, createdAt } = data;
+
+    const user = await prisma.user.create({
+      data: {
+        username,
+        displayName,
+        email: `${username}@example.test`,
+        emailVerified: true,
+        bio,
+        avatarUrl,
+        createdAt,
+      },
+    });
+
+    await prisma.account.create({
+      data: {
+        userId: user.id,
+        accountId: user.id,
+        providerId: 'credential',
+        password: demoPasswordHash,
+      },
+    });
+
+    return user;
+  }
+
   // --- original users ---
 
-  const ada = await prisma.user.create({
+  const ada = await createSeedUser({
     data: {
       username: 'ada',
       displayName: 'Ada Lovelace',
@@ -18,7 +74,7 @@ async function main() {
     },
   });
 
-  const grace = await prisma.user.create({
+  const grace = await createSeedUser({
     data: {
       username: 'grace',
       displayName: 'Grace Hopper',
@@ -27,7 +83,7 @@ async function main() {
     },
   });
 
-  const alan = await prisma.user.create({
+  const alan = await createSeedUser({
     data: {
       username: 'alan',
       displayName: 'Alan Turing',
@@ -36,7 +92,7 @@ async function main() {
     },
   });
 
-  const margaret = await prisma.user.create({
+  const margaret = await createSeedUser({
     data: {
       username: 'margaret',
       displayName: 'Margaret Hamilton',
@@ -95,7 +151,7 @@ async function main() {
 
   // --- 20 new users ---
 
-  const linus = await prisma.user.create({
+  const linus = await createSeedUser({
     data: {
       username: 'linus',
       displayName: 'Linus Torvalds',
@@ -104,7 +160,7 @@ async function main() {
     },
   });
 
-  const dennis = await prisma.user.create({
+  const dennis = await createSeedUser({
     data: {
       username: 'dennis',
       displayName: 'Dennis Ritchie',
@@ -113,7 +169,7 @@ async function main() {
     },
   });
 
-  const ken = await prisma.user.create({
+  const ken = await createSeedUser({
     data: {
       username: 'ken',
       displayName: 'Ken Thompson',
@@ -122,7 +178,7 @@ async function main() {
     },
   });
 
-  const barbara = await prisma.user.create({
+  const barbara = await createSeedUser({
     data: {
       username: 'barbara',
       displayName: 'Barbara Liskov',
@@ -131,7 +187,7 @@ async function main() {
     },
   });
 
-  const tim = await prisma.user.create({
+  const tim = await createSeedUser({
     data: {
       username: 'tim',
       displayName: 'Tim Berners-Lee',
@@ -140,7 +196,7 @@ async function main() {
     },
   });
 
-  const knuth = await prisma.user.create({
+  const knuth = await createSeedUser({
     data: {
       username: 'knuth',
       displayName: 'Donald Knuth',
@@ -149,7 +205,7 @@ async function main() {
     },
   });
 
-  const dijkstra = await prisma.user.create({
+  const dijkstra = await createSeedUser({
     data: {
       username: 'dijkstra',
       displayName: 'Edsger Dijkstra',
@@ -158,7 +214,7 @@ async function main() {
     },
   });
 
-  const vint = await prisma.user.create({
+  const vint = await createSeedUser({
     data: {
       username: 'vint',
       displayName: 'Vint Cerf',
@@ -167,7 +223,7 @@ async function main() {
     },
   });
 
-  const brian = await prisma.user.create({
+  const brian = await createSeedUser({
     data: {
       username: 'brian',
       displayName: 'Brian Kernighan',
@@ -176,7 +232,7 @@ async function main() {
     },
   });
 
-  const mccarthy = await prisma.user.create({
+  const mccarthy = await createSeedUser({
     data: {
       username: 'mccarthy',
       displayName: 'John McCarthy',
@@ -185,7 +241,7 @@ async function main() {
     },
   });
 
-  const guido = await prisma.user.create({
+  const guido = await createSeedUser({
     data: {
       username: 'guido',
       displayName: 'Guido van Rossum',
@@ -194,7 +250,7 @@ async function main() {
     },
   });
 
-  const bjarne = await prisma.user.create({
+  const bjarne = await createSeedUser({
     data: {
       username: 'bjarne',
       displayName: 'Bjarne Stroustrup',
@@ -203,7 +259,7 @@ async function main() {
     },
   });
 
-  const carmack = await prisma.user.create({
+  const carmack = await createSeedUser({
     data: {
       username: 'carmack',
       displayName: 'John Carmack',
@@ -212,7 +268,7 @@ async function main() {
     },
   });
 
-  const shannon = await prisma.user.create({
+  const shannon = await createSeedUser({
     data: {
       username: 'shannon',
       displayName: 'Claude Shannon',
@@ -221,7 +277,7 @@ async function main() {
     },
   });
 
-  const stallman = await prisma.user.create({
+  const stallman = await createSeedUser({
     data: {
       username: 'stallman',
       displayName: 'Richard Stallman',
@@ -230,7 +286,7 @@ async function main() {
     },
   });
 
-  const gosling = await prisma.user.create({
+  const gosling = await createSeedUser({
     data: {
       username: 'gosling',
       displayName: 'James Gosling',
@@ -239,7 +295,7 @@ async function main() {
     },
   });
 
-  const hoare = await prisma.user.create({
+  const hoare = await createSeedUser({
     data: {
       username: 'hoare',
       displayName: 'Tony Hoare',
@@ -248,7 +304,7 @@ async function main() {
     },
   });
 
-  const kay = await prisma.user.create({
+  const kay = await createSeedUser({
     data: {
       username: 'kay',
       displayName: 'Alan Kay',
@@ -257,7 +313,7 @@ async function main() {
     },
   });
 
-  const wirth = await prisma.user.create({
+  const wirth = await createSeedUser({
     data: {
       username: 'wirth',
       displayName: 'Niklaus Wirth',
@@ -266,7 +322,7 @@ async function main() {
     },
   });
 
-  const floyd = await prisma.user.create({
+  const floyd = await createSeedUser({
     data: {
       username: 'floyd',
       displayName: 'Robert Floyd',

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ViewerUser } from '@repo/types/features/users';
+import { SignOutButton } from '@/features/auth/components/sign-out-button';
 
 type NavBarProps = {
   viewer: ViewerUser | null;
@@ -43,6 +44,7 @@ export function NavBar({ viewer }: NavBarProps) {
           <span aria-hidden="true">👤</span>
           <span>Profile</span>
         </Link>
+        <SignOutButton />
       </div>
     </nav>
   );

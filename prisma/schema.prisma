@@ -8,23 +8,74 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  username    String   @unique
-  displayName String
-  bio         String?
-  avatarUrl   String?
-  createdAt   DateTime @default(now())
+  id            String   @id @default(cuid())
+  username      String   @unique
+  displayName   String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  bio           String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
+  sessions              Session[]
+  accounts              Account[]
   posts                 Post[]
-  following             Follow[]       @relation("Follower")
-  followers             Follow[]       @relation("Following")
+  following             Follow[]                  @relation("Follower")
+  followers             Follow[]                  @relation("Following")
   likes                 Like[]
   reposts               Repost[]
   bookmarks             Bookmark[]
-  conversations          ConversationParticipant[]
-  directMessages         DirectMessage[]
-  notificationsReceived Notification[] @relation("NotificationRecipient")
-  notificationsSent     Notification[] @relation("NotificationActor")
+  conversations         ConversationParticipant[]
+  directMessages        DirectMessage[]
+  notificationsReceived Notification[]            @relation("NotificationRecipient")
+  notificationsSent     Notification[]            @relation("NotificationActor")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
 }
 
 model Post {

@@ -28,7 +28,6 @@ export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeader
   if (isOwnProfile) {
     headerAction = (
       <EditProfileButton
-        userId={profile.id}
         username={profile.username}
         displayName={profile.displayName}
         bio={profile.bio}
@@ -38,7 +37,7 @@ export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeader
   } else if (viewerId) {
     headerAction = (
       <div className="flex items-center gap-2">
-        <MessageButton viewerId={viewerId} otherUserId={profile.id} />
+        <MessageButton otherUserId={profile.id} />
         <FollowButton
           viewerId={viewerId}
           targetUserId={profile.id}

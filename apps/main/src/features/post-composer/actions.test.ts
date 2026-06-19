@@ -7,6 +7,15 @@ const { createPost } = vi.hoisted(() => ({
   createPost: vi.fn(),
 }));
 
+vi.mock('@/features/auth/lib/viewer', () => ({
+  getViewerUser: () => ({
+    id: 'user-1',
+    username: 'alice',
+    displayName: 'Alice',
+    avatarUrl: null,
+  }),
+}));
+
 vi.mock('@repo/api-client/features/posts', () => ({
   createPostsClient: () => ({ createPost }),
 }));
@@ -23,21 +32,21 @@ describe('createPostAction', () => {
   });
 
   it('rejects an empty body', async () => {
-    const result = await createPostAction(AUTHOR_ID, '');
+    const result = await createPostAction('');
 
     expect(result).toEqual({ error: 'Post cannot be empty.' });
     expect(createPost).not.toHaveBeenCalled();
   });
 
   it('rejects a whitespace-only body', async () => {
-    const result = await createPostAction(AUTHOR_ID, '   ');
+    const result = await createPostAction('   ');
 
     expect(result).toEqual({ error: 'Post cannot be empty.' });
     expect(createPost).not.toHaveBeenCalled();
   });
 
   it('rejects a body over the maximum length', async () => {
-    const result = await createPostAction(AUTHOR_ID, 'a'.repeat(MAX_POST_LENGTH + 1));
+    const result = await createPostAction('a'.repeat(MAX_POST_LENGTH + 1));
 
     expect(result).toEqual({ error: `Post must be ${MAX_POST_LENGTH} characters or fewer.` });
     expect(createPost).not.toHaveBeenCalled();
@@ -46,7 +55,7 @@ describe('createPostAction', () => {
   it('creates a post with the trimmed body', async () => {
     createPost.mockResolvedValue({ id: 'post-1' });
 
-    const result = await createPostAction(AUTHOR_ID, '  hello world  ');
+    const result = await createPostAction('  hello world  ');
 
     expect(createPost).toHaveBeenCalledWith({ authorId: AUTHOR_ID, body: 'hello world', imageUrls: [] });
     expect(revalidatePath).toHaveBeenCalledWith('/');

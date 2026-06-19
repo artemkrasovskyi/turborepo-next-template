@@ -1,5 +1,5 @@
 import { createProfileClient } from '@repo/api-client/features/profile';
-import { createUsersClient } from '@repo/api-client/features/users';
+import { getViewerUser } from '@/features/auth/lib/viewer';
 import { ProfileHeader } from '@/features/profile/components/profile-header';
 import { ProfilePosts } from '@/features/profile/components/profile-posts';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -7,7 +7,6 @@ import { EmptyState } from '@/features/ui/components/empty-state';
 export const dynamic = 'force-dynamic';
 
 const profileClient = createProfileClient();
-const usersClient = createUsersClient();
 
 type ProfilePageProps = {
   params: Promise<{ username: string }>;
@@ -15,7 +14,7 @@ type ProfilePageProps = {
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { username } = await params;
-  const viewer = await usersClient.getViewerUser();
+  const viewer = await getViewerUser();
   const profile = await profileClient.getProfileByUsername(username, viewer?.id);
 
   if (!profile) {

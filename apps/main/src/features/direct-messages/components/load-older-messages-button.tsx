@@ -34,7 +34,7 @@ export function LoadOlderMessagesButton({
 
     startTransition(async () => {
       try {
-        const page = await loadOlderMessagesAction(conversationId, viewerId, cursor!);
+        const page = await loadOlderMessagesAction(conversationId, cursor!);
 
         if (!page) {
           setError('Could not load older messages. Please try again.');

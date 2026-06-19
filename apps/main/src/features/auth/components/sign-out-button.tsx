@@ -1,0 +1,30 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { authClient } from '../lib/auth-client';
+
+export function SignOutButton() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  function handleClick() {
+    startTransition(async () => {
+      await authClient.signOut();
+      router.push('/sign-in');
+      router.refresh();
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={isPending}
+      className="focus-ring flex flex-1 flex-col items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-slate-600 hover:text-teal-700 disabled:opacity-50 sm:flex-row sm:gap-2 sm:text-sm"
+    >
+      <span aria-hidden="true">⇥</span>
+      <span>{isPending ? 'Signing out' : 'Sign out'}</span>
+    </button>
+  );
+}

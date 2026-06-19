@@ -16,12 +16,16 @@ Attributes:
 - id
 - username
 - displayName
+- email
+- emailVerified
 - bio
 - avatarUrl
 - createdAt
+- updatedAt
 
 Rules:
 - Username must be unique.
+- Email must be unique.
 - A user can create many posts.
 - A user can follow many users.
 - A user can be followed by many users.
@@ -29,6 +33,67 @@ Rules:
 - A user can bookmark many posts.
 - A user can participate in many direct-message conversations.
 - A user can send many direct messages.
+- A user can have many authenticated sessions.
+- A user can have many linked auth accounts.
+
+---
+
+## Session
+
+A session represents an authenticated browser session.
+
+Attributes:
+- id
+- userId
+- token
+- expiresAt
+- ipAddress
+- userAgent
+- createdAt
+- updatedAt
+
+Rules:
+- A session belongs to exactly one user.
+- A session token must be unique.
+- A session is private authentication state.
+
+---
+
+## Account
+
+An account connects a user to an authentication provider.
+
+Attributes:
+- id
+- userId
+- accountId
+- providerId
+- password
+- createdAt
+- updatedAt
+
+Rules:
+- A credential account stores the password hash for email/password sign-in.
+- Passwords are never stored on `User`.
+- A user may have multiple accounts for future provider support.
+
+---
+
+## Verification
+
+A verification record stores short-lived auth verification data.
+
+Attributes:
+- id
+- identifier
+- value
+- expiresAt
+- createdAt
+- updatedAt
+
+Rules:
+- Verification records are internal auth state.
+- Verification records may expire.
 
 ---
 

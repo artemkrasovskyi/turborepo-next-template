@@ -4,15 +4,22 @@ import { revalidatePath } from 'next/cache';
 import { createFollowClient } from '@repo/api-client/features/follow';
 import { createNotificationsClient } from '@repo/api-client/features/notifications';
 import type { FollowListPage, ToggleFollowResult } from '@repo/types/features/follow';
+import { getViewerUser } from '@/features/auth/lib/viewer';
 
 const followClient = createFollowClient();
 const notificationsClient = createNotificationsClient();
 
 export async function toggleFollowAction(
-  followerId: string,
   followingId: string,
   nextIsFollowing: boolean,
 ): Promise<ToggleFollowResult> {
+  const viewer = await getViewerUser();
+  if (!viewer) {
+    return { error: 'You must be signed in to follow people.' };
+  }
+
+  const followerId = viewer.id;
+
   if (followerId === followingId) {
     return { error: 'You cannot follow yourself.' };
   }

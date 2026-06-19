@@ -67,7 +67,7 @@ export async function InboxList({ viewerId }: InboxListProps) {
           </div>
         </Link>
       ))}
-      <InboxLoadMoreButton viewerId={viewerId} initialCursor={nextCursor} />
+      <InboxLoadMoreButton initialCursor={nextCursor} />
     </div>
   );
 }

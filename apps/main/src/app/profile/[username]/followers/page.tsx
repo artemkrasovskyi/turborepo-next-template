@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { createFollowClient } from '@repo/api-client/features/follow';
 import { createProfileClient } from '@repo/api-client/features/profile';
-import { createUsersClient } from '@repo/api-client/features/users';
+import { getViewerUser } from '@/features/auth/lib/viewer';
 import { FollowersList } from '@/features/follow/components/followers-list';
 import { EmptyState } from '@/features/ui/components/empty-state';
 
@@ -9,7 +9,6 @@ export const dynamic = 'force-dynamic';
 
 const followClient = createFollowClient();
 const profileClient = createProfileClient();
-const usersClient = createUsersClient();
 
 type PageProps = {
   params: Promise<{ username: string }>;
@@ -17,7 +16,7 @@ type PageProps = {
 
 export default async function FollowersPage({ params }: PageProps) {
   const { username } = await params;
-  const viewer = await usersClient.getViewerUser();
+  const viewer = await getViewerUser();
   const profile = await profileClient.getProfileByUsername(username, viewer?.id);
 
   if (!profile) {

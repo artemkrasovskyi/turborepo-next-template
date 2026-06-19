@@ -1,6 +1,6 @@
 import { createRecommendationsClient } from '@repo/api-client/features/recommendations';
 import { createSearchClient } from '@repo/api-client/features/search';
-import { createUsersClient } from '@repo/api-client/features/users';
+import { getViewerUser } from '@/features/auth/lib/viewer';
 import { RecommendedPosts } from '@/features/recommendations/components/recommended-posts';
 import { SuggestedUsers } from '@/features/recommendations/components/suggested-users';
 import { SearchBar } from '@/features/search/components/search-bar';
@@ -9,7 +9,6 @@ import { UserSearchResults } from '@/features/search/components/user-search-resu
 export const dynamic = 'force-dynamic';
 
 const searchClient = createSearchClient();
-const usersClient = createUsersClient();
 const recommendationsClient = createRecommendationsClient();
 
 type ExplorePageProps = {
@@ -19,7 +18,7 @@ type ExplorePageProps = {
 export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   const { q } = await searchParams;
   const query = q?.trim() ?? '';
-  const viewer = await usersClient.getViewerUser();
+  const viewer = await getViewerUser();
   const viewerId = viewer?.id;
 
   if (query) {

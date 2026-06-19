@@ -1,5 +1,5 @@
 import { createPostsClient } from '@repo/api-client/features/posts';
-import { createUsersClient } from '@repo/api-client/features/users';
+import { getViewerUser } from '@/features/auth/lib/viewer';
 import { PostCard } from '@/features/post-thread/components/post-card';
 import { ReplyComposer } from '@/features/post-thread/components/reply-composer';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -7,7 +7,6 @@ import { EmptyState } from '@/features/ui/components/empty-state';
 export const dynamic = 'force-dynamic';
 
 const postsClient = createPostsClient();
-const usersClient = createUsersClient();
 
 type ThreadPageProps = {
   params: Promise<{ id: string }>;
@@ -16,7 +15,7 @@ type ThreadPageProps = {
 export default async function ThreadPage({ params }: ThreadPageProps) {
   const { id } = await params;
 
-  const viewer = await usersClient.getViewerUser();
+  const viewer = await getViewerUser();
   const thread = await postsClient.getThread({ postId: id, viewerId: viewer?.id });
 
   if (!thread) {
@@ -33,7 +32,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12 md:max-w-3xl">
       <PostCard post={thread.root} viewerId={viewer?.id ?? null} />
-      {viewer ? <ReplyComposer authorId={viewer.id} parentId={thread.root.id} /> : null}
+      {viewer ? <ReplyComposer parentId={thread.root.id} /> : null}
       {thread.replies.length === 0 ? (
         <EmptyState heading="No replies yet" description="Be the first to reply to this post." />
       ) : (

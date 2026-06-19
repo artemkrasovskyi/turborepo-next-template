@@ -8,7 +8,6 @@ import { createReplyAction } from '../actions';
 const MAX_IMAGES = 4;
 
 type ReplyComposerProps = {
-  authorId: string;
   parentId: string;
 };
 
@@ -17,7 +16,7 @@ type PreviewImage = {
   file: File;
 };
 
-export function ReplyComposer({ authorId, parentId }: ReplyComposerProps) {
+export function ReplyComposer({ parentId }: ReplyComposerProps) {
   const [body, setBody] = useState('');
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +32,12 @@ export function ReplyComposer({ authorId, parentId }: ReplyComposerProps) {
     remaining < 0 ||
     isPending ||
     isUploading;
+  let submitLabel = 'Reply';
+  if (isUploading) {
+    submitLabel = 'Uploading...';
+  } else if (isPending) {
+    submitLabel = 'Replying...';
+  }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
@@ -79,7 +84,7 @@ export function ReplyComposer({ authorId, parentId }: ReplyComposerProps) {
           imageUrls = uploaded.map((f) => f.ufsUrl);
         }
 
-        const result = await createReplyAction(authorId, parentId, body, imageUrls);
+        const result = await createReplyAction(parentId, body, imageUrls);
 
         if (result.error) {
           setError(result.error);
@@ -161,7 +166,7 @@ export function ReplyComposer({ authorId, parentId }: ReplyComposerProps) {
           disabled={isDisabled}
           className="focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
         >
-          {isUploading ? 'Uploading…' : isPending ? 'Replying…' : 'Reply'}
+          {submitLabel}
         </button>
       </div>
 

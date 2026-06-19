@@ -8,7 +8,6 @@ import { SkeletonCard } from '@/features/ui/components/skeleton';
 import { loadMoreInboxAction } from '../actions';
 
 type InboxLoadMoreButtonProps = {
-  viewerId: string;
   initialCursor: string | null;
 };
 
@@ -21,7 +20,7 @@ function getInitials(displayName: string): string {
     .join('');
 }
 
-export function InboxLoadMoreButton({ viewerId, initialCursor }: InboxLoadMoreButtonProps) {
+export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps) {
   const [items, setItems] = useState<InboxConversation[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +39,7 @@ export function InboxLoadMoreButton({ viewerId, initialCursor }: InboxLoadMoreBu
 
     startTransition(async () => {
       try {
-        const page = await loadMoreInboxAction(viewerId, cursor!);
+        const page = await loadMoreInboxAction(cursor!);
         setItems((current) => [...current, ...page.items]);
         setCursor(page.nextCursor);
       } catch {

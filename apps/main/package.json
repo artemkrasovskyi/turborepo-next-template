@@ -10,10 +10,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@better-auth/prisma-adapter": "^1.6.19",
     "@repo/api-client": "workspace:*",
     "@repo/shared": "workspace:*",
     "@repo/types": "workspace:*",
     "@uploadthing/react": "^7",
+    "better-auth": "^1.6.19",
     "next": "^15.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

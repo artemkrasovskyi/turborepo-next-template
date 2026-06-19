@@ -7,6 +7,15 @@ const { updateProfile } = vi.hoisted(() => ({
   updateProfile: vi.fn(),
 }));
 
+vi.mock('@/features/auth/lib/viewer', () => ({
+  getViewerUser: () => ({
+    id: 'user-1',
+    username: 'alice',
+    displayName: 'Alice',
+    avatarUrl: null,
+  }),
+}));
+
 vi.mock('@repo/api-client/features/profile', () => ({
   createProfileClient: () => ({ updateProfile }),
 }));
@@ -24,7 +33,7 @@ describe('updateProfileAction', () => {
   });
 
   it('rejects an empty display name', async () => {
-    const result = await updateProfileAction(USER_ID, USERNAME, '', null, null);
+    const result = await updateProfileAction(USERNAME, '', null, null);
 
     expect(result).toEqual({ error: 'Display name cannot be empty.' });
     expect(updateProfile).not.toHaveBeenCalled();
@@ -32,7 +41,6 @@ describe('updateProfileAction', () => {
 
   it('rejects a display name over the maximum length', async () => {
     const result = await updateProfileAction(
-      USER_ID,
       USERNAME,
       'a'.repeat(MAX_DISPLAY_NAME_LENGTH + 1),
       null,
@@ -47,7 +55,6 @@ describe('updateProfileAction', () => {
 
   it('rejects a bio over the maximum length', async () => {
     const result = await updateProfileAction(
-      USER_ID,
       USERNAME,
       'Alice',
       'b'.repeat(MAX_BIO_LENGTH + 1),
@@ -60,7 +67,6 @@ describe('updateProfileAction', () => {
 
   it('rejects a non-https avatar URL', async () => {
     const result = await updateProfileAction(
-      USER_ID,
       USERNAME,
       'Alice',
       null,
@@ -72,7 +78,7 @@ describe('updateProfileAction', () => {
   });
 
   it('rejects an invalid avatar URL', async () => {
-    const result = await updateProfileAction(USER_ID, USERNAME, 'Alice', null, 'not-a-url');
+    const result = await updateProfileAction(USERNAME, 'Alice', null, 'not-a-url');
 
     expect(result).toEqual({ error: 'Avatar URL is not a valid URL.' });
     expect(updateProfile).not.toHaveBeenCalled();
@@ -82,7 +88,6 @@ describe('updateProfileAction', () => {
     updateProfile.mockResolvedValue({});
 
     const result = await updateProfileAction(
-      USER_ID,
       USERNAME,
       '  Alice Smith  ',
       '  Bio text  ',
@@ -102,7 +107,7 @@ describe('updateProfileAction', () => {
   it('treats whitespace-only bio as null', async () => {
     updateProfile.mockResolvedValue({});
 
-    await updateProfileAction(USER_ID, USERNAME, 'Alice', '   ', null);
+    await updateProfileAction(USERNAME, 'Alice', '   ', null);
 
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({ bio: null }),
@@ -112,7 +117,7 @@ describe('updateProfileAction', () => {
   it('treats empty avatar URL as null', async () => {
     updateProfile.mockResolvedValue({});
 
-    await updateProfileAction(USER_ID, USERNAME, 'Alice', null, '  ');
+    await updateProfileAction(USERNAME, 'Alice', null, '  ');
 
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({ avatarUrl: null }),

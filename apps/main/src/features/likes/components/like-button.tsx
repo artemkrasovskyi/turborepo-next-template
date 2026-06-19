@@ -30,8 +30,6 @@ export function LikeButton({
     );
   }
 
-  const currentViewerId = viewerId;
-
   function handleClick() {
     const next = !isLiked;
     setError(null);
@@ -39,7 +37,7 @@ export function LikeButton({
     setLikeCount((count) => count + (next ? 1 : -1));
 
     startTransition(async () => {
-      const result = await toggleLikeAction(currentViewerId, postId, next);
+      const result = await toggleLikeAction(postId, next);
 
       if (result.error) {
         setIsLiked(!next);

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { EditProfileForm } from './edit-profile-form';
 
 type EditProfileButtonProps = {
-  userId: string;
   username: string;
   displayName: string;
   bio: string | null;
@@ -12,7 +11,6 @@ type EditProfileButtonProps = {
 };
 
 export function EditProfileButton({
-  userId,
   username,
   displayName,
   bio,
@@ -23,7 +21,6 @@ export function EditProfileButton({
   if (isEditing) {
     return (
       <EditProfileForm
-        userId={userId}
         username={username}
         initialDisplayName={displayName}
         initialBio={bio}

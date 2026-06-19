@@ -5,11 +5,10 @@ import { useState, useTransition } from 'react';
 import { startConversationAction } from '../actions';
 
 type MessageButtonProps = {
-  viewerId: string;
   otherUserId: string;
 };
 
-export function MessageButton({ viewerId, otherUserId }: MessageButtonProps) {
+export function MessageButton({ otherUserId }: MessageButtonProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -18,7 +17,7 @@ export function MessageButton({ viewerId, otherUserId }: MessageButtonProps) {
     setError(null);
 
     startTransition(async () => {
-      const result = await startConversationAction(viewerId, otherUserId);
+      const result = await startConversationAction(otherUserId);
 
       if (result.error) {
         setError(result.error);

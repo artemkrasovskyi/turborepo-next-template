@@ -7,6 +7,15 @@ const { like, unlike, notifyLike } = vi.hoisted(() => ({
   notifyLike: vi.fn(),
 }));
 
+vi.mock('@/features/auth/lib/viewer', () => ({
+  getViewerUser: () => ({
+    id: 'user-1',
+    username: 'alice',
+    displayName: 'Alice',
+    avatarUrl: null,
+  }),
+}));
+
 vi.mock('@repo/api-client/features/likes', () => ({
   createLikesClient: () => ({ like, unlike }),
 }));
@@ -26,7 +35,7 @@ describe('toggleLikeAction', () => {
   it('likes and notifies when a new like is created', async () => {
     like.mockResolvedValue({ created: true });
 
-    const result = await toggleLikeAction(USER_ID, POST_ID, true);
+    const result = await toggleLikeAction(POST_ID, true);
 
     expect(like).toHaveBeenCalledWith({ userId: USER_ID, postId: POST_ID });
     expect(notifyLike).toHaveBeenCalledWith({ actorId: USER_ID, postId: POST_ID });
@@ -36,13 +45,13 @@ describe('toggleLikeAction', () => {
   it('does not notify when the like already existed', async () => {
     like.mockResolvedValue({ created: false });
 
-    await toggleLikeAction(USER_ID, POST_ID, true);
+    await toggleLikeAction(POST_ID, true);
 
     expect(notifyLike).not.toHaveBeenCalled();
   });
 
   it('unlikes without notifying', async () => {
-    const result = await toggleLikeAction(USER_ID, POST_ID, false);
+    const result = await toggleLikeAction(POST_ID, false);
 
     expect(unlike).toHaveBeenCalledWith({ userId: USER_ID, postId: POST_ID });
     expect(notifyLike).not.toHaveBeenCalled();

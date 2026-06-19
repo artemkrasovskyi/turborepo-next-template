@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { createDirectMessagesClient } from '@repo/api-client/features/direct-messages';
-import { createUsersClient } from '@repo/api-client/features/users';
+import { requireViewerUser } from '@/features/auth/lib/viewer';
 import { DirectMessageComposer } from '@/features/direct-messages/components/direct-message-composer';
 import { LoadOlderMessagesButton } from '@/features/direct-messages/components/load-older-messages-button';
 import { MessageBubble } from '@/features/direct-messages/components/message-bubble';
@@ -9,7 +9,6 @@ import { EmptyState } from '@/features/ui/components/empty-state';
 export const dynamic = 'force-dynamic';
 
 const directMessagesClient = createDirectMessagesClient();
-const usersClient = createUsersClient();
 
 type ConversationPageProps = {
   params: Promise<{ conversationId: string }>;
@@ -17,18 +16,7 @@ type ConversationPageProps = {
 
 export default async function ConversationPage({ params }: ConversationPageProps) {
   const { conversationId } = await params;
-  const viewer = await usersClient.getViewerUser();
-
-  if (!viewer) {
-    return (
-      <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-        <EmptyState
-          heading="Conversation not available"
-          description="Sign in as a sample user to view messages."
-        />
-      </main>
-    );
-  }
+  const viewer = await requireViewerUser();
 
   const conversation = await directMessagesClient.getConversation({
     conversationId,
@@ -75,7 +63,7 @@ export default async function ConversationPage({ params }: ConversationPageProps
         )}
       </section>
 
-      <DirectMessageComposer conversationId={conversation.id} viewerId={viewer.id} />
+      <DirectMessageComposer conversationId={conversation.id} />
     </main>
   );
 }

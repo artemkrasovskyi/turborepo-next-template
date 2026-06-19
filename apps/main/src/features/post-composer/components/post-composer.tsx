@@ -7,16 +7,12 @@ import { createPostAction } from '../actions';
 
 const MAX_IMAGES = 4;
 
-type PostComposerProps = {
-  authorId: string;
-};
-
 type PreviewImage = {
   objectUrl: string;
   file: File;
 };
 
-export function PostComposer({ authorId }: PostComposerProps) {
+export function PostComposer() {
   const [body, setBody] = useState('');
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +28,12 @@ export function PostComposer({ authorId }: PostComposerProps) {
     remaining < 0 ||
     isPending ||
     isUploading;
+  let submitLabel = 'Post';
+  if (isUploading) {
+    submitLabel = 'Uploading...';
+  } else if (isPending) {
+    submitLabel = 'Posting...';
+  }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
@@ -78,7 +80,7 @@ export function PostComposer({ authorId }: PostComposerProps) {
           imageUrls = uploaded.map((f) => f.ufsUrl);
         }
 
-        const result = await createPostAction(authorId, body, imageUrls);
+        const result = await createPostAction(body, imageUrls);
 
         if (result.error) {
           setError(result.error);
@@ -160,7 +162,7 @@ export function PostComposer({ authorId }: PostComposerProps) {
           disabled={isDisabled}
           className="focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
         >
-          {isUploading ? 'Uploading…' : isPending ? 'Posting…' : 'Post'}
+          {submitLabel}
         </button>
       </div>
 

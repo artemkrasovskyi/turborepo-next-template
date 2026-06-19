@@ -8,10 +8,9 @@ import { sendDirectMessageAction } from '../actions';
 
 type DirectMessageComposerProps = {
   conversationId: string;
-  viewerId: string;
 };
 
-export function DirectMessageComposer({ conversationId, viewerId }: DirectMessageComposerProps) {
+export function DirectMessageComposer({ conversationId }: DirectMessageComposerProps) {
   const router = useRouter();
   const [body, setBody] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +21,7 @@ export function DirectMessageComposer({ conversationId, viewerId }: DirectMessag
     setError(null);
 
     startTransition(async () => {
-      const result = await sendDirectMessageAction(conversationId, viewerId, body);
+      const result = await sendDirectMessageAction(conversationId, body);
 
       if (result.error) {
         setError(result.error);

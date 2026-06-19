@@ -5,7 +5,6 @@ import { MAX_BIO_LENGTH, MAX_DISPLAY_NAME_LENGTH } from '@repo/types/features/pr
 import { updateProfileAction } from '../actions';
 
 type EditProfileFormProps = {
-  userId: string;
   username: string;
   initialDisplayName: string;
   initialBio: string | null;
@@ -15,7 +14,6 @@ type EditProfileFormProps = {
 };
 
 export function EditProfileForm({
-  userId,
   username,
   initialDisplayName,
   initialBio,
@@ -37,13 +35,7 @@ export function EditProfileForm({
 
     startTransition(async () => {
       try {
-        const result = await updateProfileAction(
-          userId,
-          username,
-          displayName,
-          bio || null,
-          avatarUrl || null,
-        );
+        const result = await updateProfileAction(username, displayName, bio || null, avatarUrl || null);
 
         if (result.error) {
           setError(result.error);
