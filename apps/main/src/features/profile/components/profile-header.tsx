@@ -1,5 +1,7 @@
+import type React from 'react';
 import Link from 'next/link';
 import type { ProfileUser } from '@repo/types/features/profile';
+import { MessageButton } from '@/features/direct-messages/components/message-button';
 import { FollowButton } from '@/features/follow/components/follow-button';
 import { EditProfileButton } from './edit-profile-button';
 import { ProfileTabs } from './profile-tabs';
@@ -22,6 +24,30 @@ function getInitials(displayName: string): string {
 const joinDateFormatter = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' });
 
 export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeaderProps) {
+  let headerAction: React.ReactNode = null;
+  if (isOwnProfile) {
+    headerAction = (
+      <EditProfileButton
+        userId={profile.id}
+        username={profile.username}
+        displayName={profile.displayName}
+        bio={profile.bio}
+        avatarUrl={profile.avatarUrl}
+      />
+    );
+  } else if (viewerId) {
+    headerAction = (
+      <div className="flex items-center gap-2">
+        <MessageButton viewerId={viewerId} otherUserId={profile.id} />
+        <FollowButton
+          viewerId={viewerId}
+          targetUserId={profile.id}
+          initialIsFollowing={profile.isFollowing}
+        />
+      </div>
+    );
+  }
+
   return (
     <header className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-4">
@@ -40,21 +66,7 @@ export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeader
           <p className="text-lg font-semibold text-slate-950">{profile.displayName}</p>
           <p className="text-sm text-slate-500">@{profile.username}</p>
         </div>
-        {isOwnProfile ? (
-          <EditProfileButton
-            userId={profile.id}
-            username={profile.username}
-            displayName={profile.displayName}
-            bio={profile.bio}
-            avatarUrl={profile.avatarUrl}
-          />
-        ) : viewerId ? (
-          <FollowButton
-            viewerId={viewerId}
-            targetUserId={profile.id}
-            initialIsFollowing={profile.isFollowing}
-          />
-        ) : null}
+        {headerAction}
       </div>
       {profile.bio ? (
         <p className="mt-4 text-base leading-7 text-slate-800">{profile.bio}</p>

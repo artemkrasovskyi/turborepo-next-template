@@ -26,6 +26,8 @@ Rules:
 - A user can follow many users.
 - A user can be followed by many users.
 - A user can like many posts.
+- A user can participate in many direct-message conversations.
+- A user can send many direct messages.
 
 ---
 
@@ -102,6 +104,58 @@ Rules:
 - A user may like a post only once.
 - A like belongs to exactly one user and one post.
 - Like counts are derived from Like relationships.
+
+---
+
+## Conversation
+
+A conversation represents a private direct-message thread between users.
+
+Attributes:
+- id
+- createdAt
+- updatedAt
+- lastMessageAt
+
+Rules:
+- A conversation has participants.
+- Phase 15 conversations are one-to-one and contain exactly two distinct participants.
+- Only participants may read or write messages in a conversation.
+- Conversations are ordered in the inbox by `lastMessageAt`.
+
+---
+
+## ConversationParticipant
+
+A conversation participant connects a user to a conversation.
+
+Attributes:
+- conversationId
+- userId
+- createdAt
+
+Rules:
+- A participant relationship belongs to exactly one user and one conversation.
+- A user may participate in a conversation only once.
+
+---
+
+## DirectMessage
+
+A direct message is a private text message sent inside a conversation.
+
+Attributes:
+- id
+- conversationId
+- senderId
+- body
+- createdAt
+
+Rules:
+- A direct message belongs to exactly one conversation.
+- A direct message has exactly one sender.
+- The sender must be a participant in the conversation.
+- Direct messages are plain text in MVP.
 
 ---
 

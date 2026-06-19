@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./features/direct-messages": "./src/features/direct-messages/index.ts",
     "./features/feed": "./src/features/feed/index.ts",
     "./features/follow": "./src/features/follow/index.ts",
     "./features/likes": "./src/features/likes/index.ts",

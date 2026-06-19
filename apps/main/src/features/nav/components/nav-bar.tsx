@@ -31,6 +31,10 @@ export function NavBar({ viewer }: NavBarProps) {
           <span aria-hidden="true">🔔</span>
           <span>Notifications</span>
         </Link>
+        <Link href="/messages" className={linkClasses}>
+          <span aria-hidden="true">✉</span>
+          <span>Messages</span>
+        </Link>
         <Link href={`/profile/${viewer.username}`} className={linkClasses}>
           <span aria-hidden="true">👤</span>
           <span>Profile</span>
