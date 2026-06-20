@@ -35,7 +35,12 @@ export function EditProfileForm({
 
     startTransition(async () => {
       try {
-        const result = await updateProfileAction(username, displayName, bio || null, avatarUrl || null);
+        const result = await updateProfileAction(
+          username,
+          displayName,
+          bio || null,
+          avatarUrl || null,
+        );
 
         if (result.error) {
           setError(result.error);
@@ -49,47 +54,53 @@ export function EditProfileForm({
     });
   }
 
+  const inputClass =
+    'focus-ring w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]';
+  const labelClass = 'text-sm font-medium text-[var(--color-text-muted)]';
+
   return (
     <div className="flex flex-col gap-4">
       <label htmlFor="edit-display-name" className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-slate-700">Display name</span>
+        <span className={labelClass}>Display name</span>
         <input
           id="edit-display-name"
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           maxLength={MAX_DISPLAY_NAME_LENGTH}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+          className={inputClass}
         />
       </label>
       <div>
         <label htmlFor="edit-bio" className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-slate-700">Bio</span>
+          <span className={labelClass}>Bio</span>
           <textarea
             id="edit-bio"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
-            className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+            className={`${inputClass} resize-none`}
           />
         </label>
-        <p className={`mt-1 text-sm ${bioRemaining < 0 ? 'text-red-600' : 'text-slate-500'}`}>
+        <p
+          className={`mt-1 text-sm ${bioRemaining < 0 ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'}`}
+        >
           {bioRemaining} characters left
         </p>
       </div>
       <label htmlFor="edit-avatar-url" className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-slate-700">Avatar URL</span>
+        <span className={labelClass}>Avatar URL</span>
         <input
           id="edit-avatar-url"
           type="url"
           value={avatarUrl}
           onChange={(e) => setAvatarUrl(e.target.value)}
           placeholder="https://example.com/avatar.png"
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+          className={inputClass}
         />
       </label>
       {error ? (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-[var(--color-danger)]" role="alert">
           {error}
         </p>
       ) : null}
@@ -98,7 +109,7 @@ export function EditProfileForm({
           type="button"
           onClick={onCancel}
           disabled={isPending}
-          className="focus-ring rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="focus-ring rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-surface-elevated)] disabled:opacity-50"
         >
           Cancel
         </button>
@@ -106,7 +117,7 @@ export function EditProfileForm({
           type="button"
           onClick={handleSubmit}
           disabled={isDisabled}
-          className="focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
+          className="focus-ring rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-foreground)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
         >
           {isPending ? 'Saving…' : 'Save'}
         </button>

@@ -26,10 +26,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
 
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-        <h1 className="text-2xl font-semibold text-slate-950">Search</h1>
+        <h1 className="text-2xl font-semibold text-[var(--color-text)]">Search</h1>
         <SearchBar defaultValue={query} />
         <section aria-label="Search results">
-          <p className="mb-4 text-sm text-slate-500">Results for &ldquo;{query}&rdquo;</p>
+          <p className="mb-4 text-sm text-[var(--color-text-muted)]">Results for &ldquo;{query}&rdquo;</p>
           <UserSearchResults query={query} initialPage={initialPage} viewerId={viewerId ?? null} />
         </section>
       </main>
@@ -43,14 +43,14 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-6 py-12 md:max-w-3xl">
-      <h1 className="text-2xl font-semibold text-slate-950">Explore</h1>
+      <h1 className="text-2xl font-semibold text-[var(--color-text)]">Explore</h1>
       <SearchBar defaultValue="" />
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-slate-950">Suggested users</h2>
+        <h2 className="mb-4 text-lg font-semibold text-[var(--color-text)]">Suggested users</h2>
         <SuggestedUsers page={suggestedUsersPage} viewerId={viewerId ?? null} />
       </section>
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-slate-950">Recommended posts</h2>
+        <h2 className="mb-4 text-lg font-semibold text-[var(--color-text)]">Recommended posts</h2>
         <RecommendedPosts page={recommendedPostsPage} viewerId={viewerId ?? null} />
       </section>
     </main>

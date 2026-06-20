@@ -16,6 +16,7 @@
     "@repo/types": "workspace:*",
     "@uploadthing/react": "^7",
     "better-auth": "^1.6.19",
+    "lucide-react": "^0.468.0",
     "next": "^15.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

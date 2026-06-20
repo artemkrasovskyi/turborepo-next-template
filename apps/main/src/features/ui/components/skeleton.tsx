@@ -3,16 +3,16 @@ type SkeletonProps = {
 };
 
 export function SkeletonLine({ className }: SkeletonProps) {
-  return <div className={`animate-pulse rounded bg-slate-200 ${className}`} />;
+  return <div className={`animate-pulse rounded bg-[var(--color-skeleton)] ${className}`} />;
 }
 
 export function SkeletonCircle({ className }: SkeletonProps) {
-  return <div className={`animate-pulse rounded-full bg-slate-200 ${className}`} />;
+  return <div className={`animate-pulse rounded-full bg-[var(--color-skeleton)] ${className}`} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
       <div className="flex items-center gap-3">
         <SkeletonCircle className="h-10 w-10" />
         <div className="flex flex-col gap-2">
@@ -30,7 +30,7 @@ export function SkeletonCard() {
 
 export function SkeletonNotificationRow() {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="flex items-start gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
       <SkeletonCircle className="h-10 w-10" />
       <div className="flex flex-1 flex-col gap-2">
         <SkeletonLine className="h-4 w-3/4" />

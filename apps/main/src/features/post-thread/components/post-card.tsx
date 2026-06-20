@@ -20,21 +20,23 @@ function getInitials(displayName: string): string {
 
 export function PostCard({ post, viewerId }: PostCardProps) {
   return (
-    <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <article className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-sm font-semibold text-[var(--color-accent-foreground)]">
           {getInitials(post.author.displayName)}
         </div>
         <div>
-          <p className="font-semibold text-slate-950">{post.author.displayName}</p>
-          <p className="text-sm text-slate-500">
+          <p className="font-semibold text-[var(--color-text)]">{post.author.displayName}</p>
+          <p className="text-sm text-[var(--color-text-muted)]">
             @{post.author.username} · {formatRelativeTime(post.createdAt)}
           </p>
         </div>
       </div>
-      <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-slate-800">{post.body}</p>
+      <p className="mt-3 whitespace-pre-wrap text-base leading-7 text-[var(--color-text)]">
+        {post.body}
+      </p>
       {post.images.length > 0 ? <PostImageGrid images={post.images} /> : null}
-      <div className="mt-3 flex items-center gap-4">
+      <div className="mt-4 flex items-center gap-5">
         <LikeButton
           viewerId={viewerId}
           postId={post.id}

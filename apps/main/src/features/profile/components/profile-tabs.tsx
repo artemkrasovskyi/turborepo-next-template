@@ -12,16 +12,30 @@ export function ProfileTabs({ username }: ProfileTabsProps) {
   const isLikes = pathname === `/profile/${username}/likes`;
 
   const tabClass = (active: boolean) =>
-    active
-      ? 'border-b-2 border-teal-600 pb-2 text-sm font-semibold text-teal-600'
-      : 'border-b-2 border-transparent pb-2 text-sm font-semibold text-slate-500 hover:text-slate-700';
+    [
+      'border-b-2 pb-2 text-sm font-semibold',
+      active
+        ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
+        : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text)]',
+    ].join(' ');
 
   return (
-    <nav className="flex gap-6 border-b border-slate-200" aria-label="Profile sections">
-      <Link href={`/profile/${username}`} className={tabClass(!isLikes)}>
+    <nav
+      className="flex gap-6 border-b border-[var(--color-separator)]"
+      aria-label="Profile sections"
+    >
+      <Link
+        href={`/profile/${username}`}
+        aria-current={!isLikes ? 'page' : undefined}
+        className={tabClass(!isLikes)}
+      >
         Posts
       </Link>
-      <Link href={`/profile/${username}/likes`} className={tabClass(isLikes)}>
+      <Link
+        href={`/profile/${username}/likes`}
+        aria-current={isLikes ? 'page' : undefined}
+        className={tabClass(isLikes)}
+      >
         Likes
       </Link>
     </nav>

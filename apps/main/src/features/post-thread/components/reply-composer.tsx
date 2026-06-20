@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useTransition } from 'react';
+import { ImagePlus, X } from 'lucide-react';
 import { useUploadThing } from '@/lib/uploadthing';
 import { MAX_POST_LENGTH } from '@repo/types/features/posts';
 import { createReplyAction } from '../actions';
@@ -34,9 +35,9 @@ export function ReplyComposer({ parentId }: ReplyComposerProps) {
     isUploading;
   let submitLabel = 'Reply';
   if (isUploading) {
-    submitLabel = 'Uploading...';
+    submitLabel = 'Uploading…';
   } else if (isPending) {
-    submitLabel = 'Replying...';
+    submitLabel = 'Replying…';
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -102,28 +103,30 @@ export function ReplyComposer({ parentId }: ReplyComposerProps) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
       <textarea
         value={body}
         onChange={(event) => setBody(event.target.value)}
         placeholder="Post your reply"
         rows={3}
         aria-label="Compose a reply"
-        className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-base text-slate-800 placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+        className="focus-ring w-full resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
       />
 
       {previews.length > 0 ? (
-        <div className={`mt-3 grid gap-1 ${previews.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+        <div
+          className={`mt-3 grid gap-1 ${previews.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
+        >
           {previews.map((preview, index) => (
             <div key={preview.objectUrl} className="relative overflow-hidden rounded-lg">
               <img src={preview.objectUrl} alt="" className="h-36 w-full object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(index)}
-                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-slate-900/60 text-white hover:bg-slate-900/80"
+                className="focus-ring absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
                 aria-label="Remove image"
               >
-                ×
+                <X size={14} aria-hidden="true" />
               </button>
             </div>
           ))}
@@ -136,42 +139,29 @@ export function ReplyComposer({ parentId }: ReplyComposerProps) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={previews.length >= MAX_IMAGES || isPending || isUploading}
-            className="focus-ring rounded p-1 text-slate-500 hover:text-teal-600 disabled:opacity-40"
+            className="focus-ring rounded p-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent)] disabled:opacity-40"
             aria-label="Add images"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-              <circle cx="9" cy="9" r="2" />
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-            </svg>
+            <ImagePlus size={20} aria-hidden="true" />
           </button>
-          <p className={`text-sm ${remaining < 0 ? 'text-red-600' : 'text-slate-500'}`}>
-            {remaining} characters left
+          <p
+            className={`text-sm ${remaining < 0 ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-muted)]'}`}
+          >
+            {remaining}
           </p>
         </div>
         <button
           type="button"
           onClick={handleSubmit}
           disabled={isDisabled}
-          className="focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50"
+          className="focus-ring rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-foreground)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
         >
           {submitLabel}
         </button>
       </div>
 
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="status">
+        <p className="mt-2 text-sm text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}

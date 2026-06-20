@@ -17,7 +17,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="pb-16 sm:pb-0">
+      <body className="bg-[var(--color-background)] pb-20 text-[var(--color-text)] sm:pb-0">
         <NavBar viewer={viewer} />
         {children}
       </body>

@@ -39,16 +39,17 @@ export function FollowButton({ viewerId, targetUserId, initialIsFollowing }: Fol
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className={
+        className={[
+          'focus-ring rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50',
           isFollowing
-            ? 'focus-ring rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50'
-            : 'focus-ring rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-50'
-        }
+            ? 'border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-elevated)]'
+            : 'bg-[var(--color-accent)] text-[var(--color-accent-foreground)] hover:bg-[var(--color-accent-hover)]',
+        ].join(' ')}
       >
         {isFollowing ? 'Following' : 'Follow'}
       </button>
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="status">
+        <p className="mt-2 text-sm text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}

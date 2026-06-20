@@ -28,23 +28,23 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   return (
     <Link
       href={href}
-      className="focus-ring flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50"
+      className="focus-ring flex items-start gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm hover:bg-[var(--color-surface-elevated)]"
     >
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-sm font-semibold text-[var(--color-accent-foreground)]">
         {getInitials(actor.displayName)}
       </div>
       <div>
-        <p className="text-base text-slate-800">
-          <span className="font-semibold text-slate-950">{actor.displayName}</span>{' '}
-          <span className="text-slate-500">@{actor.username}</span>{' '}
+        <p className="text-base text-[var(--color-text)]">
+          <span className="font-semibold">{actor.displayName}</span>{' '}
+          <span className="text-[var(--color-text-muted)]">@{actor.username}</span>{' '}
           {type === 'FOLLOW' ? 'started following you' : 'liked your post'}
         </p>
         {type === 'LIKE' && post ? (
-          <p className="mt-1 text-sm text-slate-500">
-            “{truncate(post.body, POST_SNIPPET_LENGTH)}”
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            &ldquo;{truncate(post.body, POST_SNIPPET_LENGTH)}&rdquo;
           </p>
         ) : null}
-        <p className="mt-1 text-sm text-slate-500">{formatRelativeTime(createdAt)}</p>
+        <p className="mt-1 text-sm text-[var(--color-text-muted)]">{formatRelativeTime(createdAt)}</p>
       </div>
     </Link>
   );

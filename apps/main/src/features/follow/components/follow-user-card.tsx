@@ -18,18 +18,18 @@ function getInitials(displayName: string): string {
 
 export function FollowUserCard({ user, viewerId }: FollowUserCardProps) {
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
+    <div className="flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-sm font-semibold text-[var(--color-accent-foreground)]">
         {getInitials(user.displayName)}
       </div>
       <div className="min-w-0 flex-1">
         <Link
           href={`/profile/${user.username}`}
-          className="focus-ring rounded font-semibold text-slate-950 hover:underline"
+          className="focus-ring rounded font-semibold text-[var(--color-text)] hover:underline"
         >
           {user.displayName}
         </Link>
-        <p className="text-sm text-slate-500">@{user.username}</p>
+        <p className="text-sm text-[var(--color-text-muted)]">@{user.username}</p>
       </div>
       {viewerId !== null && viewerId !== user.id ? (
         <FollowButton

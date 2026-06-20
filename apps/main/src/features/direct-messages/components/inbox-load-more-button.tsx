@@ -54,9 +54,9 @@ export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps)
         <Link
           key={conversation.id}
           href={`/messages/${conversation.id}`}
-          className="focus-ring flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm hover:bg-slate-50"
+          className="focus-ring flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm hover:bg-[var(--color-surface-elevated)]"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-teal-600 text-sm font-semibold text-white">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--color-accent)] text-sm font-semibold text-[var(--color-accent-foreground)]">
             {conversation.otherParticipant.avatarUrl ? (
               <img
                 src={conversation.otherParticipant.avatarUrl}
@@ -69,14 +69,14 @@ export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps)
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-3">
-              <p className="truncate font-semibold text-slate-950">
+              <p className="truncate font-semibold text-[var(--color-text)]">
                 {conversation.otherParticipant.displayName}
               </p>
-              <p className="shrink-0 text-xs text-slate-500">
+              <p className="shrink-0 text-xs text-[var(--color-text-muted)]">
                 {formatRelativeTime(conversation.lastMessageAt)}
               </p>
             </div>
-            <p className="truncate text-sm text-slate-500">
+            <p className="truncate text-sm text-[var(--color-text-muted)]">
               {conversation.lastMessage
                 ? conversation.lastMessage.body
                 : `@${conversation.otherParticipant.username}`}
@@ -85,7 +85,7 @@ export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps)
         </Link>
       ))}
       {error ? (
-        <p className="text-sm text-red-600" role="status">
+        <p className="text-sm text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}
@@ -94,7 +94,7 @@ export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps)
           type="button"
           onClick={handleLoadMore}
           disabled={isPending}
-          className="focus-ring rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+          className="focus-ring rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-surface-elevated)] disabled:opacity-50"
         >
           {isPending ? 'Loading...' : 'Load more'}
         </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { Repeat2 } from 'lucide-react';
 import { toggleRepostAction } from '../actions';
 
 type RepostButtonProps = {
@@ -23,9 +24,10 @@ export function RepostButton({
 
   if (viewerId === null) {
     return (
-      <span className="text-sm text-slate-500">
-        <span aria-hidden="true">↻</span> {repostCount}
-        <span className="sr-only"> reposts</span>
+      <span className="flex items-center gap-1.5 text-sm text-[var(--color-text-muted)]">
+        <Repeat2 size={16} aria-hidden="true" />
+        <span aria-hidden="true">{repostCount}</span>
+        <span className="sr-only">{repostCount} reposts</span>
       </span>
     );
   }
@@ -55,16 +57,18 @@ export function RepostButton({
         disabled={isPending}
         aria-pressed={isReposted}
         aria-label={`${isReposted ? 'Undo repost' : 'Repost'} this post, ${repostCount} reposts`}
-        className={
+        className={[
+          'focus-ring flex items-center gap-1.5 rounded text-sm disabled:opacity-50',
           isReposted
-            ? 'focus-ring rounded text-sm text-teal-600 disabled:opacity-50'
-            : 'focus-ring rounded text-sm text-slate-500 hover:text-teal-600 disabled:opacity-50'
-        }
+            ? 'text-[var(--color-accent)]'
+            : 'text-[var(--color-text-muted)] hover:text-[var(--color-accent)]',
+        ].join(' ')}
       >
-        <span aria-hidden="true">↻</span> {repostCount}
+        <Repeat2 size={16} aria-hidden="true" />
+        <span aria-hidden="true">{repostCount}</span>
       </button>
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="status">
+        <p className="mt-1 text-xs text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}

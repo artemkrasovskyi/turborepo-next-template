@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
+import { LogOut } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 
 export function SignOutButton() {
@@ -21,9 +22,10 @@ export function SignOutButton() {
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      className="focus-ring flex flex-1 flex-col items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-slate-600 hover:text-teal-700 disabled:opacity-50 sm:flex-row sm:gap-2 sm:text-sm"
+      aria-label={isPending ? 'Signing out' : 'Sign out'}
+      className="focus-ring flex flex-1 flex-col items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] disabled:opacity-50 sm:flex-row sm:gap-2 sm:text-sm"
     >
-      <span aria-hidden="true">⇥</span>
+      <LogOut size={20} aria-hidden="true" />
       <span>{isPending ? 'Signing out' : 'Sign out'}</span>
     </button>
   );

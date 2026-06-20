@@ -37,12 +37,12 @@ export default async function FollowersPage({ params }: PageProps) {
       <header>
         <Link
           href={`/profile/${username}`}
-          className="focus-ring rounded text-sm text-slate-500 hover:text-slate-700"
+          className="focus-ring rounded text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
         >
           ← @{username}
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold text-slate-950">Followers</h1>
-        <p className="text-sm text-slate-500">{profile.followerCount} followers</p>
+        <h1 className="mt-2 text-2xl font-semibold text-[var(--color-text)]">Followers</h1>
+        <p className="text-sm text-[var(--color-text-muted)]">{profile.followerCount} followers</p>
       </header>
       {initialPage.items.length === 0 ? (
         <EmptyState

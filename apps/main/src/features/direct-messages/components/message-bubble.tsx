@@ -14,12 +14,12 @@ export function MessageBubble({ message, viewerId }: MessageBubbleProps) {
       <div
         className={
           isOwnMessage
-            ? 'max-w-[80%] rounded-lg bg-teal-700 px-4 py-3 text-white'
-            : 'max-w-[80%] rounded-lg bg-white px-4 py-3 text-slate-900 shadow-sm ring-1 ring-slate-200'
+            ? 'max-w-[80%] rounded-xl bg-[var(--color-accent)] px-4 py-3 text-[var(--color-accent-foreground)]'
+            : 'max-w-[80%] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-[var(--color-text)] shadow-sm'
         }
       >
         <p className="whitespace-pre-wrap text-sm leading-6">{message.body}</p>
-        <p className={isOwnMessage ? 'mt-1 text-xs text-teal-100' : 'mt-1 text-xs text-slate-500'}>
+        <p className={isOwnMessage ? 'mt-1 text-xs text-[var(--color-accent-foreground)]/70' : 'mt-1 text-xs text-[var(--color-text-muted)]'}>
           {formatRelativeTime(message.createdAt)}
         </p>
       </div>

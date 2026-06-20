@@ -5,7 +5,7 @@ const POST_KEYS = ['post-1', 'post-2', 'post-3'];
 export default function Loading() {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-      <header className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <header className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
         <div className="flex items-center gap-4">
           <SkeletonCircle className="h-16 w-16" />
           <div className="flex flex-1 flex-col gap-2">

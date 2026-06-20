@@ -17,7 +17,7 @@ export default async function NotificationsPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12 md:max-w-3xl">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-950">Notifications</h1>
+        <h1 className="text-2xl font-semibold text-[var(--color-text)]">Notifications</h1>
       </header>
       {isEmpty ? (
         <EmptyState

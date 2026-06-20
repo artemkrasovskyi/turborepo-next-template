@@ -36,7 +36,7 @@ export function DirectMessageComposer({ conversationId }: DirectMessageComposerP
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+      className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm"
     >
       <textarea
         id="direct-message-body"
@@ -46,22 +46,22 @@ export function DirectMessageComposer({ conversationId }: DirectMessageComposerP
         maxLength={MAX_DIRECT_MESSAGE_LENGTH}
         rows={3}
         placeholder="Write a message"
-        className="focus-ring w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
+        className="focus-ring w-full resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[var(--color-text-muted)]">
           {body.length}/{MAX_DIRECT_MESSAGE_LENGTH}
         </p>
         <button
           type="submit"
           disabled={isPending}
-          className="focus-ring rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 disabled:opacity-50"
+          className="focus-ring rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-foreground)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
         >
           {isPending ? 'Sending...' : 'Send'}
         </button>
       </div>
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="status">
+        <p className="mt-2 text-sm text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}

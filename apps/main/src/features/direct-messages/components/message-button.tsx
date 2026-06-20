@@ -34,12 +34,12 @@ export function MessageButton({ otherUserId }: MessageButtonProps) {
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className="focus-ring rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+        className="focus-ring rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-surface-elevated)] disabled:opacity-50"
       >
         {isPending ? 'Opening...' : 'Message'}
       </button>
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="status">
+        <p className="mt-2 text-sm text-[var(--color-danger)]" role="status">
           {error}
         </p>
       ) : null}

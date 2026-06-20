@@ -36,15 +36,15 @@ export default async function ConversationPage({ params }: ConversationPageProps
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-      <header className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-        <Link href="/messages" className="focus-ring rounded text-sm text-slate-500 hover:underline">
+      <header className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
+        <Link href="/messages" className="focus-ring rounded text-sm text-[var(--color-text-muted)] hover:underline">
           Back to inbox
         </Link>
         <div className="mt-3">
-          <h1 className="text-2xl font-semibold text-slate-950">
+          <h1 className="text-2xl font-semibold text-[var(--color-text)]">
             {conversation.otherParticipant.displayName}
           </h1>
-          <p className="text-sm text-slate-500">@{conversation.otherParticipant.username}</p>
+          <p className="text-sm text-[var(--color-text-muted)]">@{conversation.otherParticipant.username}</p>
         </div>
       </header>
 
