@@ -33,6 +33,24 @@ The main app SHALL support both light and dark appearances.
 - **WHEN** the user's system preference is dark
 - **THEN** the app SHALL render using the dark-theme values for `--color-background`, `--color-surface`, `--color-text`, and `--color-separator`
 
+#### Scenario: User overrides the theme via the nav toggle
+
+- **WHEN** a signed-in user presses the theme toggle in the navigation bar
+- **THEN** the app SHALL switch between the light and dark theme immediately
+- **AND** the chosen theme SHALL be persisted to `localStorage` under the key `flock-theme`
+- **AND** the toggle SHALL show a Sun icon when the dark theme is active and a Moon icon when the light theme is active
+- **AND** the saved preference SHALL be applied before the first paint on subsequent page loads to prevent a flash of the wrong theme
+
+#### Scenario: Saved preference takes precedence over system preference
+
+- **WHEN** a user has saved a theme preference
+- **THEN** that preference SHALL be used regardless of the operating system's `prefers-color-scheme` setting
+
+#### Scenario: No saved preference exists
+
+- **WHEN** no theme preference is stored in `localStorage`
+- **THEN** the app SHALL follow the user's system `prefers-color-scheme` setting
+
 #### Scenario: User interacts with controls in either appearance
 
 - **WHEN** a user focuses, hovers, presses, disables, or triggers an error state

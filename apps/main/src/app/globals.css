@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* ─── Theme tokens ─────────────────────────────────────────────────── */
+/* To force a theme: add class="theme-light" or "theme-dark" to <html> */
+/* Without an explicit class, the system preference is followed.        */
+
+.theme-light,
+:root:not(.theme-dark) {
   --color-background: #f5f5f7;
   --color-surface: #ffffff;
   --color-surface-elevated: #ffffff;
@@ -20,8 +25,26 @@
   --color-disabled: #aeaeb2;
 }
 
+.theme-dark {
+  --color-background: #000000;
+  --color-surface: #1c1c1e;
+  --color-surface-elevated: #2c2c2e;
+  --color-text: #f5f5f7;
+  --color-text-muted: #8e8e93;
+  --color-border: #38383a;
+  --color-separator: #2c2c2e;
+  --color-accent: #0a84ff;
+  --color-accent-hover: #409cff;
+  --color-accent-foreground: #ffffff;
+  --color-danger: #ff453a;
+  --color-danger-foreground: #ffffff;
+  --color-focus-ring: #0a84ff;
+  --color-skeleton: #2c2c2e;
+  --color-disabled: #48484a;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.theme-light) {
     --color-background: #000000;
     --color-surface: #1c1c1e;
     --color-surface-elevated: #2c2c2e;

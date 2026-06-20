@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Bell, Bookmark, Home, LogOut, Mail, Search, User } from 'lucide-react';
 import type { ViewerUser } from '@repo/types/features/users';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
+import { ThemeToggle } from './theme-toggle';
 
 type NavLinksProps = {
   viewer: ViewerUser;
@@ -54,6 +55,7 @@ export function NavLinks({ viewer }: NavLinksProps) {
           </Link>
         );
       })}
+      <ThemeToggle />
       <SignOutButton />
     </>
   );

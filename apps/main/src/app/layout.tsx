@@ -18,6 +18,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[var(--color-background)] pb-20 text-[var(--color-text)] sm:pb-0">
+        {/* Runs before paint to apply saved theme and avoid flash */}
+        <script
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('flock-theme');if(t==='light'||t==='dark'){document.documentElement.classList.add('theme-'+t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('theme-dark');}else{document.documentElement.classList.add('theme-light');}})();`,
+          }}
+        />
         <NavBar viewer={viewer} />
         {children}
       </body>

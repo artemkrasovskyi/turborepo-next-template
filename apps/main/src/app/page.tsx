@@ -9,12 +9,6 @@ export default async function Page() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
-      <header>
-        <h1 className="text-2xl font-semibold text-[var(--color-text)]">Home</h1>
-        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-          Posts from people you follow, and your own posts.
-        </p>
-      </header>
       <PostComposer />
       <FeedList viewerId={viewer.id} />
     </main>
