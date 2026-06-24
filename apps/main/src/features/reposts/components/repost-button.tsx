@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { Repeat2 } from 'lucide-react';
+import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleRepostAction } from '../actions';
 
 type RepostButtonProps = {
@@ -17,10 +18,18 @@ export function RepostButton({
   initialIsReposted,
   initialRepostCount,
 }: RepostButtonProps) {
-  const [isReposted, setIsReposted] = useState(initialIsReposted);
   const [repostCount, setRepostCount] = useState(initialRepostCount);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const {
+    value: isReposted,
+    error,
+    isPending,
+    toggle: handleClick,
+  } = useOptimisticToggle(initialIsReposted, async (next) => {
+    setRepostCount((count) => count + (next ? 1 : -1));
+    const result = await toggleRepostAction(postId, next);
+    if (result.error) setRepostCount((count) => count + (next ? -1 : 1));
+    return result;
+  });
 
   if (viewerId === null) {
     return (
@@ -30,23 +39,6 @@ export function RepostButton({
         <span className="sr-only">{repostCount} reposts</span>
       </span>
     );
-  }
-
-  function handleClick() {
-    const next = !isReposted;
-    setError(null);
-    setIsReposted(next);
-    setRepostCount((count) => count + (next ? 1 : -1));
-
-    startTransition(async () => {
-      const result = await toggleRepostAction(postId, next);
-
-      if (result.error) {
-        setIsReposted(!next);
-        setRepostCount((count) => count + (next ? -1 : 1));
-        setError(result.error);
-      }
-    });
   }
 
   return (

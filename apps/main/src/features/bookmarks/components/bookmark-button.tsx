@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
 import { Bookmark } from 'lucide-react';
+import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleBookmarkAction } from '../actions';
 
 type BookmarkButtonProps = {
@@ -11,9 +11,12 @@ type BookmarkButtonProps = {
 };
 
 export function BookmarkButton({ viewerId, postId, initialIsBookmarked }: BookmarkButtonProps) {
-  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const {
+    value: isBookmarked,
+    error,
+    isPending,
+    toggle: handleClick,
+  } = useOptimisticToggle(initialIsBookmarked, (next) => toggleBookmarkAction(postId, next));
 
   if (viewerId === null) {
     return (
@@ -22,21 +25,6 @@ export function BookmarkButton({ viewerId, postId, initialIsBookmarked }: Bookma
         <span className="sr-only">{isBookmarked ? 'Saved' : 'Not saved'}</span>
       </span>
     );
-  }
-
-  function handleClick() {
-    const next = !isBookmarked;
-    setError(null);
-    setIsBookmarked(next);
-
-    startTransition(async () => {
-      const result = await toggleBookmarkAction(postId, next);
-
-      if (result.error) {
-        setIsBookmarked(!next);
-        setError(result.error);
-      }
-    });
   }
 
   return (

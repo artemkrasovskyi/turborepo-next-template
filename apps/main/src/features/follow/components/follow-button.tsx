@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleFollowAction } from '../actions';
 
 type FollowButtonProps = {
@@ -10,27 +10,15 @@ type FollowButtonProps = {
 };
 
 export function FollowButton({ viewerId, targetUserId, initialIsFollowing }: FollowButtonProps) {
-  const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const {
+    value: isFollowing,
+    error,
+    isPending,
+    toggle: handleClick,
+  } = useOptimisticToggle(initialIsFollowing, (next) => toggleFollowAction(targetUserId, next));
 
   if (viewerId === targetUserId) {
     return null;
-  }
-
-  function handleClick() {
-    const next = !isFollowing;
-    setError(null);
-    setIsFollowing(next);
-
-    startTransition(async () => {
-      const result = await toggleFollowAction(targetUserId, next);
-
-      if (result.error) {
-        setIsFollowing(!next);
-        setError(result.error);
-      }
-    });
   }
 
   return (

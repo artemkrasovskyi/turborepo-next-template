@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { Heart } from 'lucide-react';
+import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleLikeAction } from '../actions';
 
 type LikeButtonProps = {
@@ -17,10 +18,18 @@ export function LikeButton({
   initialIsLiked,
   initialLikeCount,
 }: LikeButtonProps) {
-  const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const {
+    value: isLiked,
+    error,
+    isPending,
+    toggle: handleClick,
+  } = useOptimisticToggle(initialIsLiked, async (next) => {
+    setLikeCount((count) => count + (next ? 1 : -1));
+    const result = await toggleLikeAction(postId, next);
+    if (result.error) setLikeCount((count) => count + (next ? -1 : 1));
+    return result;
+  });
 
   if (viewerId === null) {
     return (
@@ -30,23 +39,6 @@ export function LikeButton({
         <span className="sr-only">{likeCount} likes</span>
       </span>
     );
-  }
-
-  function handleClick() {
-    const next = !isLiked;
-    setError(null);
-    setIsLiked(next);
-    setLikeCount((count) => count + (next ? 1 : -1));
-
-    startTransition(async () => {
-      const result = await toggleLikeAction(postId, next);
-
-      if (result.error) {
-        setIsLiked(!next);
-        setLikeCount((count) => count + (next ? -1 : 1));
-        setError(result.error);
-      }
-    });
   }
 
   return (
