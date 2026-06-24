@@ -22,6 +22,7 @@ bun run db:studio    # open Prisma Studio
 ```
 
 To run a command for a single workspace only, use `--filter`:
+
 ```sh
 bunx turbo lint --filter=@repo/main
 bunx turbo typecheck --filter=@repo/shared
@@ -46,13 +47,13 @@ This is a Turborepo monorepo using Bun as the package manager.
 
 ### Workspaces
 
-| Workspace | Package name | Purpose |
-|---|---|---|
-| `apps/main` | `@repo/main` | Primary Next.js app (port 3000) |
-| `apps/nodes-list` | `@repo/nodes-list` | Secondary Next.js app (port 3001) |
-| `packages/shared` | `@repo/shared` | Prisma client singleton, app config utilities |
+| Workspace             | Package name       | Purpose                                               |
+| --------------------- | ------------------ | ----------------------------------------------------- |
+| `apps/main`           | `@repo/main`       | Primary Next.js app (port 3000)                       |
+| `apps/nodes-list`     | `@repo/nodes-list` | Secondary Next.js app (port 3001)                     |
+| `packages/shared`     | `@repo/shared`     | Prisma client singleton, app config utilities         |
 | `packages/api-client` | `@repo/api-client` | Data-fetching clients (direct Prisma calls, not HTTP) |
-| `packages-types` | `@repo/types` | Shared TypeScript types |
+| `packages-types`      | `@repo/types`      | Shared TypeScript types                               |
 
 ### Dependency graph
 
@@ -66,18 +67,79 @@ apps/* → @repo/types
 ### Key patterns
 
 **Feature-based layout** — all workspaces organise code under `src/features/<feature-name>/`. Adding a new feature means creating a directory there, not at the root of `src`.
-
 **Package exports** — packages use explicit `exports` in `package.json` (e.g. `"./features/notes": "./src/features/notes/index.ts"`). Add a new export entry whenever a new feature module is created in a package.
-
 **Transpiled packages** — both Next.js apps list shared packages in `transpilePackages` in `next.config.mjs` so TypeScript sources are resolved directly without a build step.
-
 **Prisma singleton** — `@repo/shared/features/database` exports a single `prisma` instance (guarded on `globalThis` in dev). Import from there; never instantiate `PrismaClient` elsewhere.
-
 **api-client calls Prisma directly** — there is no HTTP API layer. `@repo/api-client` imports the `prisma` singleton and runs queries. Client functions are created with a factory (`createNotesClient()`).
-
 **Use typeScript strict mode**
 
-**Follow OpenSpec workflow**
+# OpenSpec Workflow
+
+All behavior-changing work must follow the OpenSpec workflow.
+
+## Requirements
+
+- Create changes under `openspec/changes/<change-id>/`
+- Each change must contain:
+  - `proposal.md`
+  - `design.md`
+  - `tasks.md`
+  - spec deltas under `specs/`
+
+- Run validation before implementation:
+
+```bash
+openspec validate <change-id> --strict
+```
+
+- Do not begin implementation until the change has been reviewed.
+- Archive completed changes:
+
+```bash
+openspec archive <change-id> --yes
+```
+
+- Do not modify durable specs directly. Update them through the OpenSpec archive workflow.
+
+# Spec Traceability
+
+All implemented OpenSpec changes must be traceable from specification to code.
+
+## Requirements
+
+- Add traceability annotations to key implementation files.
+- Use annotations only in:
+  - route files
+  - server actions
+  - API clients
+  - services
+  - controllers
+  - application entry points
+
+- Do not annotate every small UI component.
+
+- Before modifying an existing feature:
+  1. Locate related `@openspec` annotations.
+  2. Read the referenced specification.
+  3. Review the existing implementation before proposing changes.
+
+## Annotation Format
+
+```ts
+/**
+ * @openspec openspec/specs/feed/spec.md
+ * @change add-feed-and-thread
+ */
+```
+
+## Example Locations
+
+```text
+apps/main/src/app/page.tsx
+apps/main/src/features/feed/actions.ts
+packages/api-client/src/features/feed/index.ts
+apps/api/src/search/search.service.ts
+```
 
 ### Linting & formatting rules
 
