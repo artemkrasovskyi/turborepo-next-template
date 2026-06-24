@@ -8,6 +8,7 @@ Prettier, ESLint with Airbnb rules, and Stylelint.
 ```txt
 apps/main
 apps/nodes-list
+apps/api
 packages/shared
 packages/api-client
 packages-types
@@ -38,7 +39,7 @@ bun run db:generate
 bun run dev
 ```
 
-The main app runs on port `3000`, and the notes list app runs on port `3001`.
+The main app runs on port `3000`, the nodes-list app on port `3001`, and the NestJS API on port `3002`.
 
 ## Useful Scripts
 
