@@ -11,8 +11,8 @@ export default function Loading() {
         <SkeletonLine className="h-4 w-24" />
       </div>
       <div className="flex flex-col gap-3">
-        {ROW_KEYS.map((k) => (
-          <SkeletonNotificationRow key={k} />
+        {ROW_KEYS.map((rowKey) => (
+          <SkeletonNotificationRow key={rowKey} />
         ))}
       </div>
     </main>

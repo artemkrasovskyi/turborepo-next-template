@@ -63,10 +63,10 @@ describe('SearchService', () => {
   });
 
   it('sets nextCursor when extra record is returned', async () => {
-    const users = Array.from({ length: 21 }, (_, i) => ({
-      id: `user-${i}`,
-      username: `user${i}`,
-      displayName: `User ${i}`,
+    const users = Array.from({ length: 21 }, (_, index) => ({
+      id: `user-${index}`,
+      username: `user${index}`,
+      displayName: `User ${index}`,
       avatarUrl: null,
     }));
     mockUserFindMany.mockResolvedValue(users);
@@ -77,10 +77,10 @@ describe('SearchService', () => {
   });
 
   it('sets nextCursor to null when no extra record', async () => {
-    const users = Array.from({ length: 5 }, (_, i) => ({
-      id: `user-${i}`,
-      username: `user${i}`,
-      displayName: `User ${i}`,
+    const users = Array.from({ length: 5 }, (_, index) => ({
+      id: `user-${index}`,
+      username: `user${index}`,
+      displayName: `User ${index}`,
       avatarUrl: null,
     }));
     mockUserFindMany.mockResolvedValue(users);

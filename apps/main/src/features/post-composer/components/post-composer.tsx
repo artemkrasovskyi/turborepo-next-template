@@ -57,7 +57,7 @@ export function PostComposer() {
   function removeImage(index: number) {
     setPreviews((prev) => {
       URL.revokeObjectURL(prev[index]!.objectUrl);
-      return prev.filter((_, i) => i !== index);
+      return prev.filter((_, itemIndex) => itemIndex !== index);
     });
   }
 
@@ -70,7 +70,7 @@ export function PostComposer() {
 
         if (previews.length > 0) {
           setIsUploading(true);
-          const uploaded = await startUpload(previews.map((p) => p.file));
+          const uploaded = await startUpload(previews.map((previewImage) => previewImage.file));
           setIsUploading(false);
 
           if (!uploaded) {
@@ -78,7 +78,7 @@ export function PostComposer() {
             return;
           }
 
-          imageUrls = uploaded.map((f) => f.ufsUrl);
+          imageUrls = uploaded.map((uploadedFile) => uploadedFile.ufsUrl);
         }
 
         const result = await createPostAction(body, imageUrls);
@@ -88,7 +88,7 @@ export function PostComposer() {
           return;
         }
 
-        previews.forEach((p) => URL.revokeObjectURL(p.objectUrl));
+        previews.forEach((previewImage) => URL.revokeObjectURL(previewImage.objectUrl));
         setBody('');
         setPreviews([]);
       } catch {

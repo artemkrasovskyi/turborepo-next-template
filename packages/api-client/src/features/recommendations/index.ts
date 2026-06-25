@@ -98,7 +98,7 @@ export function createRecommendationsClient() {
               where: { followerId: viewerId },
               select: { followingId: true },
             })
-          ).map((f) => f.followingId)
+          ).map((follow) => follow.followingId)
         : [];
 
       const excludeIds = viewerId ? [viewerId, ...alreadyFollowedIds] : [];
@@ -115,7 +115,7 @@ export function createRecommendationsClient() {
               distinct: ['followingId'],
               take: 200,
             })
-          ).map((f) => f.followingId)
+          ).map((follow) => follow.followingId)
         : [];
 
       // Candidate 2: recently active users
@@ -128,7 +128,7 @@ export function createRecommendationsClient() {
           select: { id: true },
           take: 100,
         })
-      ).map((u) => u.id);
+      ).map((user) => user.id);
 
       // Candidate 3: recently joined users as fallback
       const recentlyJoinedIds = (
@@ -138,7 +138,7 @@ export function createRecommendationsClient() {
           select: { id: true },
           take: 50,
         })
-      ).map((u) => u.id);
+      ).map((user) => user.id);
 
       const allCandidateIds = [
         ...new Set([...socialProximityCandidateIds, ...recentlyActiveIds, ...recentlyJoinedIds]),
@@ -186,29 +186,29 @@ export function createRecommendationsClient() {
 
       // Score and sort
       const scored = candidates
-        .map((u) => {
+        .map((candidate) => {
           const accountAgeDays = Math.floor(
-            (now.getTime() - u.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+            (now.getTime() - candidate.createdAt.getTime()) / (1000 * 60 * 60 * 24),
           );
           const score = scoreSuggestedUser(
-            mutualFollowCounts.get(u.id) ?? 0,
-            u._count.followers,
-            u._count.posts,
+            mutualFollowCounts.get(candidate.id) ?? 0,
+            candidate._count.followers,
+            candidate._count.posts,
             accountAgeDays,
           );
-          return { ...u, score };
+          return { ...candidate, score };
         })
-        .sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          if (b.createdAt.getTime() !== a.createdAt.getTime())
-            return b.createdAt.getTime() - a.createdAt.getTime();
-          return b.id < a.id ? -1 : 1;
+        .sort((userA, userB) => {
+          if (userB.score !== userA.score) return userB.score - userA.score;
+          if (userB.createdAt.getTime() !== userA.createdAt.getTime())
+            return userB.createdAt.getTime() - userA.createdAt.getTime();
+          return userB.id < userA.id ? -1 : 1;
         });
 
       // Apply cursor
       let startIndex = 0;
       if (cursor) {
-        const idx = scored.findIndex((u) => u.id === cursor);
+        const idx = scored.findIndex((scoredUser) => scoredUser.id === cursor);
         if (idx !== -1) startIndex = idx + 1;
       }
 
@@ -217,11 +217,11 @@ export function createRecommendationsClient() {
       const pageItems = hasMore ? slice.slice(0, pageSize) : slice;
 
       // Viewer follow state (all are not followed — excluded above)
-      const items: FollowListUser[] = pageItems.map((u) => ({
-        id: u.id,
-        username: u.username,
-        displayName: u.displayName,
-        avatarUrl: u.avatarUrl,
+      const items: FollowListUser[] = pageItems.map((user) => ({
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
         isFollowing: false,
       }));
 
@@ -246,7 +246,7 @@ export function createRecommendationsClient() {
               where: { followerId: viewerId },
               select: { followingId: true },
             })
-          ).map((f) => f.followingId)
+          ).map((follow) => follow.followingId)
         : [];
 
       // Candidate 1: posts liked or reposted by users the viewer follows
@@ -264,8 +264,8 @@ export function createRecommendationsClient() {
             take: 200,
           }),
         ]);
-        likedRows.forEach((r) => engagedPostIds.push(r.postId));
-        repostedRows.forEach((r) => engagedPostIds.push(r.postId));
+        likedRows.forEach((row) => engagedPostIds.push(row.postId));
+        repostedRows.forEach((row) => engagedPostIds.push(row.postId));
       }
 
       // Candidate 2: posts by authors followed by people the viewer follows
@@ -278,7 +278,7 @@ export function createRecommendationsClient() {
                 distinct: ['followingId'],
                 take: 100,
               })
-            ).map((f) => f.followingId)
+            ).map((follow) => follow.followingId)
           : [];
 
       const secondHopPostIds =
@@ -293,7 +293,7 @@ export function createRecommendationsClient() {
                 select: { id: true },
                 take: 200,
               })
-            ).map((p) => p.id)
+            ).map((post) => post.id)
           : [];
 
       // Candidate 3: recently engaged public posts as fallback
@@ -304,7 +304,7 @@ export function createRecommendationsClient() {
           select: { id: true },
           take: 100,
         })
-      ).map((p) => p.id);
+      ).map((post) => post.id);
 
       const allCandidateIds = [
         ...new Set([...engagedPostIds, ...secondHopPostIds, ...recentEngagedPostIds]),
@@ -346,19 +346,19 @@ export function createRecommendationsClient() {
       if (followedIds.length > 0) {
         const [likedEngaged, repostedEngaged] = await Promise.all([
           prisma.like.findMany({
-            where: { userId: { in: followedIds }, postId: { in: posts.map((p) => p.id) } },
+            where: { userId: { in: followedIds }, postId: { in: posts.map((post) => post.id) } },
             select: { postId: true },
           }),
           prisma.repost.findMany({
-            where: { userId: { in: followedIds }, postId: { in: posts.map((p) => p.id) } },
+            where: { userId: { in: followedIds }, postId: { in: posts.map((post) => post.id) } },
             select: { postId: true },
           }),
         ]);
-        likedEngaged.forEach((r) => {
-          followedEngagementMap.set(r.postId, (followedEngagementMap.get(r.postId) ?? 0) + 1);
+        likedEngaged.forEach((row) => {
+          followedEngagementMap.set(row.postId, (followedEngagementMap.get(row.postId) ?? 0) + 1);
         });
-        repostedEngaged.forEach((r) => {
-          followedEngagementMap.set(r.postId, (followedEngagementMap.get(r.postId) ?? 0) + 1);
+        repostedEngaged.forEach((row) => {
+          followedEngagementMap.set(row.postId, (followedEngagementMap.get(row.postId) ?? 0) + 1);
         });
       }
 
@@ -367,31 +367,31 @@ export function createRecommendationsClient() {
 
       // Score and sort
       const scored = posts
-        .map((p) => {
+        .map((post) => {
           const postAgeDays = Math.floor(
-            (now.getTime() - p.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+            (now.getTime() - post.createdAt.getTime()) / (1000 * 60 * 60 * 24),
           );
           const score = scoreRecommendedPost(
-            followedEngagementMap.get(p.id) ?? 0,
-            secondHopAuthorSet.has(p.authorId) ? 1 : 0,
-            p._count.likes,
-            p._count.reposts,
-            p._count.replies,
+            followedEngagementMap.get(post.id) ?? 0,
+            secondHopAuthorSet.has(post.authorId) ? 1 : 0,
+            post._count.likes,
+            post._count.reposts,
+            post._count.replies,
             postAgeDays,
           );
-          return { ...p, score };
+          return { ...post, score };
         })
-        .sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          if (b.createdAt.getTime() !== a.createdAt.getTime())
-            return b.createdAt.getTime() - a.createdAt.getTime();
-          return b.id < a.id ? -1 : 1;
+        .sort((postA, postB) => {
+          if (postB.score !== postA.score) return postB.score - postA.score;
+          if (postB.createdAt.getTime() !== postA.createdAt.getTime())
+            return postB.createdAt.getTime() - postA.createdAt.getTime();
+          return postB.id < postA.id ? -1 : 1;
         });
 
       // Apply cursor
       let startIndex = 0;
       if (cursor) {
-        const idx = scored.findIndex((p) => p.id === cursor);
+        const idx = scored.findIndex((scoredPost) => scoredPost.id === cursor);
         if (idx !== -1) startIndex = idx + 1;
       }
 
@@ -399,18 +399,18 @@ export function createRecommendationsClient() {
       const hasMore = slice.length > pageSize;
       const pageItems = hasMore ? slice.slice(0, pageSize) : slice;
 
-      const items: FeedPost[] = pageItems.map((p) => ({
-        id: p.id,
-        body: p.body,
-        createdAt: p.createdAt.toISOString(),
-        author: p.author,
-        replyCount: p._count.replies,
-        likeCount: p._count.likes,
-        isLikedByViewer: Array.isArray(p.likes) ? p.likes.length > 0 : false,
-        repostCount: p._count.reposts,
-        isRepostedByViewer: Array.isArray(p.reposts) ? p.reposts.length > 0 : false,
-        isBookmarkedByViewer: Array.isArray(p.bookmarks) ? p.bookmarks.length > 0 : false,
-        images: p.images,
+      const items: FeedPost[] = pageItems.map((post) => ({
+        id: post.id,
+        body: post.body,
+        createdAt: post.createdAt.toISOString(),
+        author: post.author,
+        replyCount: post._count.replies,
+        likeCount: post._count.likes,
+        isLikedByViewer: Array.isArray(post.likes) ? post.likes.length > 0 : false,
+        repostCount: post._count.reposts,
+        isRepostedByViewer: Array.isArray(post.reposts) ? post.reposts.length > 0 : false,
+        isBookmarkedByViewer: Array.isArray(post.bookmarks) ? post.bookmarks.length > 0 : false,
+        images: post.images,
       }));
 
       return {

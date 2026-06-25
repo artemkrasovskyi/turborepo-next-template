@@ -31,7 +31,7 @@ async function batchIsFollowing(viewerId: string | undefined, ids: string[]): Pr
     where: { followerId: viewerId, followingId: { in: ids } },
     select: { followingId: true },
   });
-  return new Set(rows.map((r) => r.followingId));
+  return new Set(rows.map((row) => row.followingId));
 }
 
 export function createSearchClient() {
@@ -61,11 +61,11 @@ export function createSearchClient() {
       const pageItems = hasMore ? users.slice(0, pageSize) : users;
       const viewerFollowSet = await batchIsFollowing(
         viewerId,
-        pageItems.map((u) => u.id),
+        pageItems.map((user) => user.id),
       );
 
       return {
-        items: pageItems.map((u) => ({ ...u, isFollowing: viewerFollowSet.has(u.id) })),
+        items: pageItems.map((user) => ({ ...user, isFollowing: viewerFollowSet.has(user.id) })),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.id ?? null) : null,
       };
     },
@@ -79,10 +79,10 @@ export function createSearchClient() {
 
       const viewerFollowSet = await batchIsFollowing(
         viewerId,
-        users.map((u) => u.id),
+        users.map((user) => user.id),
       );
 
-      return users.map((u) => ({ ...u, isFollowing: viewerFollowSet.has(u.id) }));
+      return users.map((user) => ({ ...user, isFollowing: viewerFollowSet.has(user.id) }));
     },
 
     async getTrendingPosts({ viewerId, days, limit }: TrendingPostsParams): Promise<FeedPost[]> {

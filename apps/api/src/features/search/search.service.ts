@@ -57,7 +57,7 @@ export class SearchService {
 
     let followedIds = new Set<string>();
     if (viewerId && page.length > 0) {
-      const userIds = page.map((u) => u.id);
+      const userIds = page.map((user) => user.id);
       const follows = await this.prismaService.client.follow.findMany({
         where: {
           followerId: viewerId,
@@ -65,15 +65,15 @@ export class SearchService {
         },
         select: { followingId: true },
       });
-      followedIds = new Set(follows.map((f) => f.followingId));
+      followedIds = new Set(follows.map((follow) => follow.followingId));
     }
 
-    const items: FollowListUser[] = page.map((u) => ({
-      id: u.id,
-      username: u.username,
-      displayName: u.displayName,
-      avatarUrl: u.avatarUrl,
-      isFollowing: followedIds.has(u.id),
+    const items: FollowListUser[] = page.map((user) => ({
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      isFollowing: followedIds.has(user.id),
     }));
 
     const nextCursor = hasMore && page.length > 0 ? (page[page.length - 1]?.id ?? null) : null;

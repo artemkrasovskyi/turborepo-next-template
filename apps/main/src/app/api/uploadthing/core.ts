@@ -1,9 +1,9 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 
-const f = createUploadthing();
+const uploader = createUploadthing();
 
 export const ourFileRouter = {
-  imageUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 4 } }).onUploadComplete(
+  imageUploader: uploader({ image: { maxFileSize: '4MB', maxFileCount: 4 } }).onUploadComplete(
     ({ file }) => ({ url: file.ufsUrl }),
   ),
 } satisfies FileRouter;

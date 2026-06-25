@@ -11,16 +11,16 @@ export default function Loading() {
       <section>
         <SkeletonLine className="mb-4 h-6 w-28" />
         <div className="grid gap-3 sm:grid-cols-2">
-          {USER_KEYS.map((k) => (
-            <SkeletonNotificationRow key={k} />
+          {USER_KEYS.map((skeletonKey) => (
+            <SkeletonNotificationRow key={skeletonKey} />
           ))}
         </div>
       </section>
       <section>
         <SkeletonLine className="mb-4 h-6 w-40" />
         <div className="flex flex-col gap-4">
-          {POST_KEYS.map((k) => (
-            <SkeletonCard key={k} />
+          {POST_KEYS.map((skeletonKey) => (
+            <SkeletonCard key={skeletonKey} />
           ))}
         </div>
       </section>

@@ -69,7 +69,7 @@ export function createFeedClient() {
         select: { followingId: true },
       });
 
-      const followedIds = [...follows.map((f) => f.followingId), viewerId];
+      const followedIds = [...follows.map((follow) => follow.followingId), viewerId];
 
       const postInclude = {
         author: { select: authorSelect },
@@ -105,15 +105,15 @@ export function createFeedClient() {
         }),
       ]);
 
-      const postEntries: FeedEntry[] = posts.map((p) => mapPostToEntry(p));
-      const repostEntries: FeedEntry[] = reposts.map((r) =>
-        mapPostToEntry(r.post, r.user, r.createdAt),
+      const postEntries: FeedEntry[] = posts.map((post) => mapPostToEntry(post));
+      const repostEntries: FeedEntry[] = reposts.map((repost) =>
+        mapPostToEntry(repost.post, repost.user, repost.createdAt),
       );
 
-      const merged = [...postEntries, ...repostEntries].sort((a, b) => {
-        const diff = b.feedTime.getTime() - a.feedTime.getTime();
+      const merged = [...postEntries, ...repostEntries].sort((entryA, entryB) => {
+        const diff = entryB.feedTime.getTime() - entryA.feedTime.getTime();
         if (diff !== 0) return diff;
-        return b.postId > a.postId ? 1 : -1;
+        return entryB.postId > entryA.postId ? 1 : -1;
       });
 
       // Deduplicate by postId — keep first occurrence (latest feedTime due to sort order)
@@ -128,7 +128,7 @@ export function createFeedClient() {
       const pageItems = hasMore ? deduped.slice(0, pageSize) : deduped;
 
       return {
-        items: pageItems.map((e) => e.item),
+        items: pageItems.map((entry) => entry.item),
         nextCursor: hasMore ? (pageItems[pageItems.length - 1]?.feedTime.toISOString() ?? null) : null,
       };
     },

@@ -66,7 +66,7 @@ export function EditProfileForm({
           id="edit-display-name"
           type="text"
           value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
+          onChange={(event) => setDisplayName(event.target.value)}
           maxLength={MAX_DISPLAY_NAME_LENGTH}
           className={inputClass}
         />
@@ -77,7 +77,7 @@ export function EditProfileForm({
           <textarea
             id="edit-bio"
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            onChange={(event) => setBio(event.target.value)}
             rows={3}
             className={`${inputClass} resize-none`}
           />
@@ -94,7 +94,7 @@ export function EditProfileForm({
           id="edit-avatar-url"
           type="url"
           value={avatarUrl}
-          onChange={(e) => setAvatarUrl(e.target.value)}
+          onChange={(event) => setAvatarUrl(event.target.value)}
           placeholder="https://example.com/avatar.png"
           className={inputClass}
         />

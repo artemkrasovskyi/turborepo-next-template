@@ -24,7 +24,7 @@ async function batchIsFollowing(viewerId: string | undefined, ids: string[]): Pr
     where: { followerId: viewerId, followingId: { in: ids } },
     select: { followingId: true },
   });
-  return new Set(rows.map((r) => r.followingId));
+  return new Set(rows.map((row) => row.followingId));
 }
 
 export function createFollowClient() {
@@ -73,14 +73,14 @@ export function createFollowClient() {
 
       const hasMore = follows.length > pageSize;
       const pageItems = hasMore ? follows.slice(0, pageSize) : follows;
-      const users = pageItems.map((f) => f.follower);
+      const users = pageItems.map((followRecord) => followRecord.follower);
       const viewerFollowSet = await batchIsFollowing(
         viewerId,
-        users.map((u) => u.id),
+        users.map((user) => user.id),
       );
 
       return {
-        items: users.map((u) => ({ ...u, isFollowing: viewerFollowSet.has(u.id) })),
+        items: users.map((user) => ({ ...user, isFollowing: viewerFollowSet.has(user.id) })),
         nextCursor: hasMore ? (users[users.length - 1]?.id ?? null) : null,
       };
     },
@@ -110,14 +110,14 @@ export function createFollowClient() {
 
       const hasMore = follows.length > pageSize;
       const pageItems = hasMore ? follows.slice(0, pageSize) : follows;
-      const users = pageItems.map((f) => f.following);
+      const users = pageItems.map((followRecord) => followRecord.following);
       const viewerFollowSet = await batchIsFollowing(
         viewerId,
-        users.map((u) => u.id),
+        users.map((user) => user.id),
       );
 
       return {
-        items: users.map((u) => ({ ...u, isFollowing: viewerFollowSet.has(u.id) })),
+        items: users.map((user) => ({ ...user, isFollowing: viewerFollowSet.has(user.id) })),
         nextCursor: hasMore ? (users[users.length - 1]?.id ?? null) : null,
       };
     },

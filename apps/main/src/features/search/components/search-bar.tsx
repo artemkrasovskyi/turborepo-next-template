@@ -11,8 +11,8 @@ export function SearchBar({ defaultValue }: SearchBarProps) {
   const router = useRouter();
   const [value, setValue] = useState(defaultValue);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     const trimmed = value.trim();
     if (trimmed) {
       router.push(`/explore?q=${encodeURIComponent(trimmed)}`);
@@ -27,7 +27,7 @@ export function SearchBar({ defaultValue }: SearchBarProps) {
         type="search"
         aria-label="Search users"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(event) => setValue(event.target.value)}
         placeholder="Search users…"
         className="focus-ring flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
       />
