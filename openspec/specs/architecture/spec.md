@@ -7,7 +7,7 @@
 
 ## Principles
 
-- **Graph-first exploration** — when `graphify-out/` exists, query the graphify knowledge graph before reading files or starting implementation; use direct file exploration only for gaps the graph cannot answer
+- **Graph-first exploration** — when `graphify-out/` exists, query the graphify knowledge graph before reading files or starting implementation; use direct file exploration only for gaps the graph cannot answer; stop after the graph answers and do not re-read files the graph already described
 - **Feature-first structure** — all code lives under `src/features/<name>/`; no flat file dumps at `src/`
 - **No HTTP layer** — `@repo/api-client` calls Prisma directly; avoid REST/GraphQL unless a real need emerges
 - **One Prisma instance** — always import from `@repo/shared/features/database`; never instantiate `PrismaClient` elsewhere
