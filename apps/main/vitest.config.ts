@@ -14,6 +14,7 @@ export default defineConfig({
       '@repo/types': path.resolve(__dirname, '../../packages-types/src'),
       '@repo/api-client': path.resolve(__dirname, '../../packages/api-client/src'),
       '@repo/shared': path.resolve(__dirname, '../../packages/shared/src'),
+      'server-only': path.resolve(__dirname, './src/__mocks__/server-only.ts'),
     },
   },
 });

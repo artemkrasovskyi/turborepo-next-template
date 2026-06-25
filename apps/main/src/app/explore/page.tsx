@@ -1,14 +1,17 @@
+/**
+ * @openspec openspec/specs/frontend-search/spec.md
+ * @change Phase-19-search-module
+ */
 import { createRecommendationsClient } from '@repo/api-client/features/recommendations';
-import { createSearchClient } from '@repo/api-client/features/search';
 import { getViewerUser } from '@/features/auth/lib/viewer';
 import { RecommendedPosts } from '@/features/recommendations/components/recommended-posts';
 import { SuggestedUsers } from '@/features/recommendations/components/suggested-users';
+import { searchUsersFromBackend } from '@/features/search/backend-search-client';
 import { SearchBar } from '@/features/search/components/search-bar';
 import { UserSearchResults } from '@/features/search/components/user-search-results';
 
 export const dynamic = 'force-dynamic';
 
-const searchClient = createSearchClient();
 const recommendationsClient = createRecommendationsClient();
 
 type ExplorePageProps = {
@@ -22,7 +25,14 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   const viewerId = viewer?.id;
 
   if (query) {
-    const initialPage = await searchClient.searchUsers({ query, viewerId });
+    let initialPage;
+    let searchError: string | null = null;
+
+    try {
+      initialPage = await searchUsersFromBackend({ query, ...(viewerId ? { viewerId } : {}) });
+    } catch {
+      searchError = 'Search is currently unavailable. Please try again later.';
+    }
 
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 px-6 py-12 md:max-w-3xl">
@@ -30,7 +40,13 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         <SearchBar defaultValue={query} />
         <section aria-label="Search results">
           <p className="mb-4 text-sm text-[var(--color-text-muted)]">Results for &ldquo;{query}&rdquo;</p>
-          <UserSearchResults query={query} initialPage={initialPage} viewerId={viewerId ?? null} />
+          {searchError ? (
+            <p className="text-sm text-[var(--color-danger)]" role="alert">
+              {searchError}
+            </p>
+          ) : (
+            <UserSearchResults query={query} initialPage={initialPage!} viewerId={viewerId ?? null} />
+          )}
         </section>
       </main>
     );

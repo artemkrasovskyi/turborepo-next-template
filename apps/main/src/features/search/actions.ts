@@ -1,14 +1,17 @@
 'use server';
 
-import { createSearchClient } from '@repo/api-client/features/search';
-import type { FollowListPage } from '@repo/types/features/follow';
+/**
+ * @openspec openspec/specs/frontend-search/spec.md
+ * @change Phase-19-search-module
+ */
 
-const searchClient = createSearchClient();
+import type { FollowListPage } from '@repo/types/features/follow';
+import { searchUsersFromBackend } from './backend-search-client';
 
 export async function loadMoreUserSearchAction(
   query: string,
   cursor: string,
   viewerId?: string,
 ): Promise<FollowListPage> {
-  return searchClient.searchUsers({ query, viewerId, cursor });
+  return searchUsersFromBackend({ query, cursor, ...(viewerId ? { viewerId } : {}) });
 }
