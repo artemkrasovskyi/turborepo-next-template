@@ -8,6 +8,8 @@ module.exports = function (options) {
       alias: {
         // Resolve @repo/shared TypeScript source directly so ts-loader compiles it
         '@repo/shared': resolve(__dirname, '../../packages/shared/src'),
+        // Resolve @repo/types TypeScript source directly so ts-loader compiles it
+        '@repo/types': resolve(__dirname, '../../packages-types/src'),
       },
     },
     externals: [
