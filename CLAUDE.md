@@ -146,3 +146,4 @@ apps/api/src/search/search.service.ts
 - ESLint extends Airbnb + `airbnb-typescript` + Prettier. Named React components must use **function declarations**, not arrow functions.
 - Prettier: single quotes, trailing commas everywhere, 100-char print width.
 - Stylelint uses `stylelint-config-standard` with Tailwind at-rules allowed.
+- Never use one letter variables. For example: u -> user, s -> status, f -> follow.
