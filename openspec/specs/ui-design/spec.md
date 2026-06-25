@@ -1,5 +1,9 @@
 # UI Design
 
+## Purpose
+
+Define the main app's Apple-inspired web visual language, responsive navigation, theme behavior, shared surface treatments, and accessibility requirements.
+
 ## Requirements
 
 ### Requirement: Apple Web Visual Direction
