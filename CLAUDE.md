@@ -38,12 +38,6 @@ bun run db:generate
 bun run dev
 ```
 
-## Codebase Exploration
-
-When `graphify-out/` exists in the repo root, query the graphify knowledge graph **before** exploring files or starting implementation. Use the `graphify` skill to query architecture, file relationships, and codebase structure. Only fall back to direct file exploration for questions the graph cannot answer.
-
-**Stop after the graph answers.** Do not re-read files that the graph already described. Querying the graph and then also reading the same files defeats the purpose and doubles token usage.
-
 ## Architecture
 
 This is a Turborepo monorepo using Bun as the package manager.
