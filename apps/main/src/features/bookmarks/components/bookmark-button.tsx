@@ -1,5 +1,6 @@
 'use client';
 
+import { FC } from 'react';
 import { Bookmark } from 'lucide-react';
 import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleBookmarkAction } from '../actions';
@@ -10,7 +11,7 @@ type BookmarkButtonProps = {
   initialIsBookmarked: boolean;
 };
 
-export function BookmarkButton({ viewerId, postId, initialIsBookmarked }: BookmarkButtonProps) {
+export const BookmarkButton: FC<BookmarkButtonProps> = ({ viewerId, postId, initialIsBookmarked }) => {
   const {
     value: isBookmarked,
     error,

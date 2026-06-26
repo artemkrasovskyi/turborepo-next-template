@@ -123,6 +123,14 @@ All implemented OpenSpec changes must be traceable from specification to code.
   2. Read the referenced specification.
   3. Review the existing implementation before proposing changes.
 
+## Graphify Workflow
+
+After completing and archiving an OpenSpec change:
+
+1. Ensure key implementation files contain `@openspec` annotations pointing to durable specs under `openspec/specs/`.
+2. Run `graphify .`
+3. Review `GRAPH_REPORT.md` for missing or stale links.
+
 ## Annotation Format
 
 ```ts
@@ -143,7 +151,10 @@ apps/api/src/search/search.service.ts
 
 ### Linting & formatting rules
 
-- ESLint extends Airbnb + `airbnb-typescript` + Prettier. Named React components must use **function declarations**, not arrow functions.
+- ESLint extends Airbnb + `airbnb-typescript` + Prettier.
+- React components must use **arrow functions**: `const Foo: FC<Props> = ({ ... }) => { ... }`.
+- Async server components cannot use `FC<>` (async is incompatible); use a typed arrow without `FC`: `const Foo = async ({ ... }: Props) => { ... }`.
+- `FC` and all React types (`FormEvent`, `ChangeEvent`, `ReactNode`, etc.) must be imported directly from `'react'`, never accessed via the `React.X` namespace.
 - Prettier: single quotes, trailing commas everywhere, 100-char print width.
 - Stylelint uses `stylelint-config-standard` with Tailwind at-rules allowed.
-- Never use one letter variables. For example: u -> user, s -> status, f -> follow.
+- Never use single-letter variable names, including destructured ones. For example: `q` → `rawQuery`, `u` → `user`, `s` → `status`, `f` → `follow`. This applies to function parameters, destructuring, and loop variables.

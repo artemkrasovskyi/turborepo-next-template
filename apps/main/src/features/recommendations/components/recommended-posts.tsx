@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { FeedPage } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -8,7 +9,7 @@ type RecommendedPostsProps = {
   viewerId: string | null;
 };
 
-export function RecommendedPosts({ page, viewerId }: RecommendedPostsProps) {
+export const RecommendedPosts: FC<RecommendedPostsProps> = ({ page, viewerId }) => {
   if (page.items.length === 0) {
     return (
       <EmptyState

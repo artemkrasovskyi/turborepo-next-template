@@ -10,7 +10,7 @@ type ProfilePostsProps = {
   viewerId: string | null;
 };
 
-export async function ProfilePosts({ userId, viewerId }: ProfilePostsProps) {
+export const ProfilePosts = async ({ userId, viewerId }: ProfilePostsProps) => {
   const { items, nextCursor } = await profileClient.getProfilePosts({
     userId,
     viewerId: viewerId ?? undefined,

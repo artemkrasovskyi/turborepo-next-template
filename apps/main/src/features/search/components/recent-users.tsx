@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { FollowListUser } from '@repo/types/features/follow';
 import { FollowUserCard } from '@/features/follow/components/follow-user-card';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -7,7 +8,7 @@ type RecentUsersProps = {
   viewerId: string | null;
 };
 
-export function RecentUsers({ users, viewerId }: RecentUsersProps) {
+export const RecentUsers: FC<RecentUsersProps> = ({ users, viewerId }) => {
   if (users.length === 0) {
     return <EmptyState heading="No users yet" description="Be the first to join." />;
   }

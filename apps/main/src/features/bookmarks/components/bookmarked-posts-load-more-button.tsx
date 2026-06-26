@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
@@ -11,10 +11,10 @@ type BookmarkedPostsLoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-export function BookmarkedPostsLoadMoreButton({
+export const BookmarkedPostsLoadMoreButton: FC<BookmarkedPostsLoadMoreButtonProps> = ({
   viewerId,
   initialCursor,
-}: BookmarkedPostsLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export function BookmarkedPostsLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }

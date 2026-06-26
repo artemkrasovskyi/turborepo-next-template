@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { DirectMessageItem } from '@repo/types/features/direct-messages';
 import { RelativeTime } from '@/features/ui/components/relative-time';
 
@@ -6,7 +7,7 @@ type MessageBubbleProps = {
   viewerId: string;
 };
 
-export function MessageBubble({ message, viewerId }: MessageBubbleProps) {
+export const MessageBubble: FC<MessageBubbleProps> = ({ message, viewerId }) => {
   const isOwnMessage = message.sender.id === viewerId;
 
   return (

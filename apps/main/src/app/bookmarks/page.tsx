@@ -3,7 +3,7 @@ import { BookmarkedPosts } from '@/features/bookmarks/components/bookmarked-post
 
 export const dynamic = 'force-dynamic';
 
-export default async function BookmarksPage() {
+const BookmarksPage = async () => {
   const viewer = await requireViewerUser();
 
   return (
@@ -15,4 +15,6 @@ export default async function BookmarksPage() {
       <BookmarkedPosts viewerId={viewer.id} />
     </main>
   );
-}
+};
+
+export default BookmarksPage;

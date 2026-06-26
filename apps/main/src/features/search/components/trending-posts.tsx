@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -7,7 +8,7 @@ type TrendingPostsProps = {
   viewerId: string | null;
 };
 
-export function TrendingPosts({ posts, viewerId }: TrendingPostsProps) {
+export const TrendingPosts: FC<TrendingPostsProps> = ({ posts, viewerId }) => {
   if (posts.length === 0) {
     return (
       <EmptyState

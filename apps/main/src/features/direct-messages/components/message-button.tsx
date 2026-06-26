@@ -1,19 +1,19 @@
 'use client';
 
+import { FC, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
 import { startConversationAction } from '../actions';
 
 type MessageButtonProps = {
   otherUserId: string;
 };
 
-export function MessageButton({ otherUserId }: MessageButtonProps) {
+export const MessageButton: FC<MessageButtonProps> = ({ otherUserId }) => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleClick() {
+  const handleClick = () => {
     setError(null);
 
     startTransition(async () => {

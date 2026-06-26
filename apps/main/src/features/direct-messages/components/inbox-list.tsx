@@ -10,16 +10,15 @@ type InboxListProps = {
   viewerId: string;
 };
 
-function getInitials(displayName: string): string {
-  return displayName
+const getInitials = (displayName: string): string =>
+  displayName
     .split(' ')
     .filter((part) => part.length > 0)
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join('');
-}
 
-export async function InboxList({ viewerId }: InboxListProps) {
+export const InboxList = async ({ viewerId }: InboxListProps) => {
   const { items, nextCursor } = await directMessagesClient.getInbox({ viewerId });
 
   if (items.length === 0) {

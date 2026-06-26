@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
 import { loadMoreFeedAction } from '../actions';
@@ -11,7 +11,7 @@ type LoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-export function LoadMoreButton({ viewerId, initialCursor }: LoadMoreButtonProps) {
+export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ viewerId, initialCursor }) => {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export function LoadMoreButton({ viewerId, initialCursor }: LoadMoreButtonProps)
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }

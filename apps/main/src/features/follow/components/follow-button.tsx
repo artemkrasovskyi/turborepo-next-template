@@ -1,5 +1,6 @@
 'use client';
 
+import { FC } from 'react';
 import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleFollowAction } from '../actions';
 
@@ -9,7 +10,7 @@ type FollowButtonProps = {
   initialIsFollowing: boolean;
 };
 
-export function FollowButton({ viewerId, targetUserId, initialIsFollowing }: FollowButtonProps) {
+export const FollowButton: FC<FollowButtonProps> = ({ viewerId, targetUserId, initialIsFollowing }) => {
   const {
     value: isFollowing,
     error,

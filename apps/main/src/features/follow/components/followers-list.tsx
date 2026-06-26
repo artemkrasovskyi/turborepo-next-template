@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FollowListPage } from '@repo/types/features/follow';
 import { loadMoreFollowersAction } from '../actions';
 import { FollowUserCard } from './follow-user-card';
@@ -11,13 +11,13 @@ type FollowersListProps = {
   viewerId: string | null;
 };
 
-export function FollowersList({ initialPage, userId, viewerId }: FollowersListProps) {
+export const FollowersList: FC<FollowersListProps> = ({ initialPage, userId, viewerId }) => {
   const [items, setItems] = useState(initialPage.items);
   const [nextCursor, setNextCursor] = useState(initialPage.nextCursor);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (!nextCursor) return;
     setError(null);
     startTransition(async () => {

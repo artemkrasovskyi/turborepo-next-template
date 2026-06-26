@@ -9,7 +9,7 @@ type FeedListProps = {
   viewerId: string;
 };
 
-export async function FeedList({ viewerId }: FeedListProps) {
+export const FeedList = async ({ viewerId }: FeedListProps) => {
   const { items, nextCursor } = await feedClient.getHomeFeed({ viewerId });
 
   if (items.length === 0) {

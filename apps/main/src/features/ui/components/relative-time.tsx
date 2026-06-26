@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { formatRelativeTime } from '@/features/feed/lib/format-relative-time';
 
 type RelativeTimeProps = {
   isoDate: string;
 };
 
-export function RelativeTime({ isoDate }: RelativeTimeProps) {
+export const RelativeTime: FC<RelativeTimeProps> = ({ isoDate }) => {
   const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {

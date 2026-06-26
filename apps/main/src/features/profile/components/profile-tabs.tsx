@@ -1,5 +1,6 @@
 'use client';
 
+import { FC } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -7,7 +8,7 @@ type ProfileTabsProps = {
   username: string;
 };
 
-export function ProfileTabs({ username }: ProfileTabsProps) {
+export const ProfileTabs: FC<ProfileTabsProps> = ({ username }) => {
   const pathname = usePathname();
   const isLikes = pathname === `/profile/${username}/likes`;
 

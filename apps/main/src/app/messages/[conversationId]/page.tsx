@@ -14,7 +14,7 @@ type ConversationPageProps = {
   params: Promise<{ conversationId: string }>;
 };
 
-export default async function ConversationPage({ params }: ConversationPageProps) {
+const ConversationPage = async ({ params }: ConversationPageProps) => {
   const { conversationId } = await params;
   const viewer = await requireViewerUser();
 
@@ -66,4 +66,6 @@ export default async function ConversationPage({ params }: ConversationPageProps
       <DirectMessageComposer conversationId={conversation.id} />
     </main>
   );
-}
+};
+
+export default ConversationPage;

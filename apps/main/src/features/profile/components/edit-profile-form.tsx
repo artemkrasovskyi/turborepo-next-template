@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import { MAX_BIO_LENGTH, MAX_DISPLAY_NAME_LENGTH } from '@repo/types/features/profile';
 import { updateProfileAction } from '../actions';
 
@@ -13,14 +13,14 @@ type EditProfileFormProps = {
   onSaved: () => void;
 };
 
-export function EditProfileForm({
+export const EditProfileForm: FC<EditProfileFormProps> = ({
   username,
   initialDisplayName,
   initialBio,
   initialAvatarUrl,
   onCancel,
   onSaved,
-}: EditProfileFormProps) {
+}) => {
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [bio, setBio] = useState(initialBio ?? '');
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl ?? '');
@@ -30,7 +30,7 @@ export function EditProfileForm({
   const bioRemaining = MAX_BIO_LENGTH - bio.length;
   const isDisabled = displayName.trim().length === 0 || isPending;
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     setError(null);
 
     startTransition(async () => {
@@ -52,7 +52,7 @@ export function EditProfileForm({
         setError('Could not save profile. Please try again.');
       }
     });
-  }
+  };
 
   const inputClass =
     'focus-ring w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]';

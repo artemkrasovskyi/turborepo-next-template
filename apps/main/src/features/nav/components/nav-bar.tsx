@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { ViewerUser } from '@repo/types/features/users';
 import { NavLinks } from './nav-links';
 
@@ -5,7 +6,7 @@ type NavBarProps = {
   viewer: ViewerUser | null;
 };
 
-export function NavBar({ viewer }: NavBarProps) {
+export const NavBar: FC<NavBarProps> = ({ viewer }) => {
   if (!viewer) {
     return null;
   }

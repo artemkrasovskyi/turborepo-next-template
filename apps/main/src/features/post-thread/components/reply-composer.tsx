@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { ChangeEvent, FC, useRef, useState, useTransition } from 'react';
 import { ImagePlus, X } from 'lucide-react';
 import { useUploadThing } from '@/lib/uploadthing';
 import { MAX_POST_LENGTH } from '@repo/types/features/posts';
@@ -17,7 +17,7 @@ type PreviewImage = {
   file: File;
 };
 
-export function ReplyComposer({ parentId }: ReplyComposerProps) {
+export const ReplyComposer: FC<ReplyComposerProps> = ({ parentId }) => {
   const [body, setBody] = useState('');
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export function ReplyComposer({ parentId }: ReplyComposerProps) {
     submitLabel = 'Replying…';
   }
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
     if (files.length === 0) return;
 
@@ -58,14 +58,14 @@ export function ReplyComposer({ parentId }: ReplyComposerProps) {
     }
   }
 
-  function removeImage(index: number) {
+  const removeImage = (index: number): void => {
     setPreviews((prev) => {
       URL.revokeObjectURL(prev[index]!.objectUrl);
       return prev.filter((_, itemIndex) => itemIndex !== index);
     });
   }
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     setError(null);
 
     startTransition(async () => {

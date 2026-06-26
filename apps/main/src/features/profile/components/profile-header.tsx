@@ -1,4 +1,4 @@
-import type React from 'react';
+import { FC, ReactNode } from 'react';
 import Link from 'next/link';
 import type { ProfileUser } from '@repo/types/features/profile';
 import { MessageButton } from '@/features/direct-messages/components/message-button';
@@ -12,19 +12,18 @@ type ProfileHeaderProps = {
   isOwnProfile: boolean;
 };
 
-function getInitials(displayName: string): string {
-  return displayName
+const getInitials = (displayName: string): string =>
+  displayName
     .split(' ')
     .filter((part) => part.length > 0)
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join('');
-}
 
 const joinDateFormatter = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' });
 
-export function ProfileHeader({ profile, viewerId, isOwnProfile }: ProfileHeaderProps) {
-  let headerAction: React.ReactNode = null;
+export const ProfileHeader: FC<ProfileHeaderProps> = ({ profile, viewerId, isOwnProfile }) => {
+  let headerAction: ReactNode = null;
   if (isOwnProfile) {
     headerAction = (
       <EditProfileButton

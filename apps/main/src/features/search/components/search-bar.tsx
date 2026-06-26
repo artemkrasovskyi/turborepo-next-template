@@ -1,25 +1,26 @@
 'use client';
 
+import { FC, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 type SearchBarProps = {
   defaultValue: string;
 };
 
-export function SearchBar({ defaultValue }: SearchBarProps) {
+export const SearchBar: FC<SearchBarProps> = ({ defaultValue }) => {
   const router = useRouter();
   const [value, setValue] = useState(defaultValue);
 
-  function handleSubmit(event: React.FormEvent) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const trimmed = value.trim();
     if (trimmed) {
       router.push(`/explore?q=${encodeURIComponent(trimmed)}`);
     } else {
       router.push('/explore');
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} role="search" className="flex gap-2">

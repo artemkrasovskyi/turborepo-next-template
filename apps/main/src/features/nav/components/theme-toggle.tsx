@@ -1,32 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'flock-theme';
 
-function getAppliedTheme(): Theme {
+const getAppliedTheme = (): Theme => {
   if (document.documentElement.classList.contains('theme-dark')) return 'dark';
   return 'light';
 }
 
-function applyTheme(theme: Theme) {
+const applyTheme = (theme: Theme): void => {
   const root = document.documentElement;
   root.classList.remove('theme-light', 'theme-dark');
   root.classList.add(`theme-${theme}`);
   localStorage.setItem(STORAGE_KEY, theme);
 }
 
-export function ThemeToggle() {
+export const ThemeToggle: FC = () => {
   const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
     setTheme(getAppliedTheme());
   }, []);
 
-  function toggle() {
+  const toggle = () => {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     setTheme(next);

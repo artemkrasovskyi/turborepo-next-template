@@ -18,9 +18,9 @@ type ExplorePageProps = {
   searchParams: Promise<{ q?: string }>;
 };
 
-export default async function ExplorePage({ searchParams }: ExplorePageProps) {
-  const { q } = await searchParams;
-  const query = q?.trim() ?? '';
+const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
+  const { q: rawQuery } = await searchParams;
+  const query = rawQuery?.trim() ?? '';
   const viewer = await getViewerUser();
   const viewerId = viewer?.id;
 
@@ -71,4 +71,6 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
       </section>
     </main>
   );
-}
+};
+
+export default ExplorePage;

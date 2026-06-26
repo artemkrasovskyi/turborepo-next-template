@@ -10,7 +10,7 @@ type LikedPostsProps = {
   viewerId: string | null;
 };
 
-export async function LikedPosts({ userId, viewerId }: LikedPostsProps) {
+export const LikedPosts = async ({ userId, viewerId }: LikedPostsProps) => {
   const { items, nextCursor } = await likesClient.getLikedPosts({
     userId,
     ...(viewerId ? { viewerId } : {}),

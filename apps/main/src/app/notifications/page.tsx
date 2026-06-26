@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 const notificationsClient = createNotificationsClient();
 
-export default async function NotificationsPage() {
+const NotificationsPage = async () => {
   const viewer = await requireViewerUser();
 
   const page = await notificationsClient.getNotifications({ userId: viewer.id });
@@ -32,4 +32,6 @@ export default async function NotificationsPage() {
       <NotificationLoadMoreButton userId={viewer.id} initialCursor={page.nextCursor} />
     </main>
   );
-}
+};
+
+export default NotificationsPage;

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import type { FeedPost } from '@repo/types/features/feed';
@@ -12,17 +13,15 @@ type FeedItemProps = {
   viewerId: string | null;
 };
 
-function getInitials(displayName: string): string {
-  return displayName
+const getInitials = (displayName: string): string =>
+  displayName
     .split(' ')
     .filter((part) => part.length > 0)
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join('');
-}
 
-export function FeedItem({ post, viewerId }: FeedItemProps) {
-  return (
+export const FeedItem: FC<FeedItemProps> = ({ post, viewerId }) => (
     <article className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm">
       {post.repostedBy ? (
         <Link
@@ -83,5 +82,4 @@ export function FeedItem({ post, viewerId }: FeedItemProps) {
         />
       </div>
     </article>
-  );
-}
+);

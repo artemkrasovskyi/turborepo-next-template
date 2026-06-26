@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { DirectMessageItem } from '@repo/types/features/direct-messages';
 import { loadOlderMessagesAction } from '../actions';
 import { MessageBubble } from './message-bubble';
@@ -11,11 +11,11 @@ type LoadOlderMessagesButtonProps = {
   initialCursor: string | null;
 };
 
-export function LoadOlderMessagesButton({
+export const LoadOlderMessagesButton: FC<LoadOlderMessagesButtonProps> = ({
   conversationId,
   viewerId,
   initialCursor,
-}: LoadOlderMessagesButtonProps) {
+}) => {
   const [items, setItems] = useState<DirectMessageItem[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ export function LoadOlderMessagesButton({
     return null;
   }
 
-  function handleLoadOlder() {
+  const handleLoadOlder = () => {
     if (cursor === null) {
       return;
     }

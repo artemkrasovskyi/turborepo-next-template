@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { EditProfileForm } from './edit-profile-form';
 
 type EditProfileButtonProps = {
@@ -10,12 +10,12 @@ type EditProfileButtonProps = {
   avatarUrl: string | null;
 };
 
-export function EditProfileButton({
+export const EditProfileButton: FC<EditProfileButtonProps> = ({
   username,
   displayName,
   bio,
   avatarUrl,
-}: EditProfileButtonProps) {
+}) => {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {

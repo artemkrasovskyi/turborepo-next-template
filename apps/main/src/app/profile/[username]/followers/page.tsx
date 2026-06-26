@@ -14,7 +14,7 @@ type PageProps = {
   params: Promise<{ username: string }>;
 };
 
-export default async function FollowersPage({ params }: PageProps) {
+const FollowersPage = async ({ params }: PageProps) => {
   const { username } = await params;
   const viewer = await getViewerUser();
   const profile = await profileClient.getProfileByUsername(username, viewer?.id);
@@ -58,4 +58,6 @@ export default async function FollowersPage({ params }: PageProps) {
       )}
     </main>
   );
-}
+};
+
+export default FollowersPage;

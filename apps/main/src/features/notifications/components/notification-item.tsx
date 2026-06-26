@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import Link from 'next/link';
 import type { NotificationItem as NotificationItemData } from '@repo/types/features/notifications';
 import { RelativeTime } from '@/features/ui/components/relative-time';
@@ -8,20 +9,18 @@ type NotificationItemProps = {
 
 const POST_SNIPPET_LENGTH = 80;
 
-function getInitials(displayName: string): string {
-  return displayName
+const getInitials = (displayName: string): string =>
+  displayName
     .split(' ')
     .filter((part) => part.length > 0)
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join('');
-}
 
-function truncate(body: string, length: number): string {
-  return body.length > length ? `${body.slice(0, length).trimEnd()}…` : body;
-}
+const truncate = (body: string, length: number): string =>
+  body.length > length ? `${body.slice(0, length).trimEnd()}…` : body;
 
-export function NotificationItem({ notification }: NotificationItemProps) {
+export const NotificationItem: FC<NotificationItemProps> = ({ notification }) => {
   const { actor, type, createdAt, post } = notification;
   const href = type === 'LIKE' && post ? `/posts/${post.id}` : `/profile/${actor.username}`;
 

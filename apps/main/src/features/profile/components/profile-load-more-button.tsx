@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
@@ -12,11 +12,11 @@ type ProfileLoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-export function ProfileLoadMoreButton({
+export const ProfileLoadMoreButton: FC<ProfileLoadMoreButtonProps> = ({
   userId,
   viewerId,
   initialCursor,
-}: ProfileLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function ProfileLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }
@@ -42,7 +42,7 @@ export function ProfileLoadMoreButton({
         setError('Could not load more posts. Please try again.');
       }
     });
-  }
+  };
 
   return (
     <>

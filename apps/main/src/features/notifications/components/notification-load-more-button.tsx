@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { NotificationItem as NotificationItemData } from '@repo/types/features/notifications';
 import { SkeletonNotificationRow } from '@/features/ui/components/skeleton';
 import { NotificationItem } from './notification-item';
@@ -11,10 +11,10 @@ type NotificationLoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-export function NotificationLoadMoreButton({
+export const NotificationLoadMoreButton: FC<NotificationLoadMoreButtonProps> = ({
   userId,
   initialCursor,
-}: NotificationLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<NotificationItemData[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export function NotificationLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
@@ -11,10 +11,10 @@ type RecommendedPostsLoadMoreButtonProps = {
   viewerId: string | null;
 };
 
-export function RecommendedPostsLoadMoreButton({
+export const RecommendedPostsLoadMoreButton: FC<RecommendedPostsLoadMoreButtonProps> = ({
   initialCursor,
   viewerId,
-}: RecommendedPostsLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState<string | null>(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export function RecommendedPostsLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }
@@ -40,7 +40,7 @@ export function RecommendedPostsLoadMoreButton({
         setError('Could not load more posts. Please try again.');
       }
     });
-  }
+  };
 
   return (
     <>

@@ -9,7 +9,7 @@ type BookmarkedPostsProps = {
   viewerId: string;
 };
 
-export async function BookmarkedPosts({ viewerId }: BookmarkedPostsProps) {
+export const BookmarkedPosts = async ({ viewerId }: BookmarkedPostsProps) => {
   const { items, nextCursor } = await bookmarksClient.getBookmarkedPosts({
     userId: viewerId,
     viewerId,

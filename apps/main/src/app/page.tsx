@@ -4,7 +4,7 @@ import { PostComposer } from '@/features/post-composer/components/post-composer'
 
 export const dynamic = 'force-dynamic';
 
-export default async function Page() {
+const Page = async () => {
   const viewer = await requireViewerUser();
 
   return (
@@ -13,4 +13,6 @@ export default async function Page() {
       <FeedList viewerId={viewer.id} />
     </main>
   );
-}
+};
+
+export default Page;

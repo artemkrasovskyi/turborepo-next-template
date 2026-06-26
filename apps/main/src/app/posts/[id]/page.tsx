@@ -12,7 +12,7 @@ type ThreadPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function ThreadPage({ params }: ThreadPageProps) {
+const ThreadPage = async ({ params }: ThreadPageProps) => {
   const { id } = await params;
 
   const viewer = await getViewerUser();
@@ -42,4 +42,6 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
       )}
     </main>
   );
-}
+};
+
+export default ThreadPage;

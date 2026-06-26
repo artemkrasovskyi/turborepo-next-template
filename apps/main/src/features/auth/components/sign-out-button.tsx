@@ -1,15 +1,15 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { FC, useTransition } from 'react';
 import { LogOut } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 
-export function SignOutButton() {
+export const SignOutButton: FC = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  function handleClick() {
+  const handleClick = () => {
     startTransition(async () => {
       await authClient.signOut();
       router.push('/sign-in');

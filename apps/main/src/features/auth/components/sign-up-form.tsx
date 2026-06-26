@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { FC, FormEvent, useState, useTransition } from 'react';
 import { authClient } from '../lib/auth-client';
 
 const inputClass =
   'focus-ring rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-base text-[var(--color-text)]';
 const labelClass = 'flex flex-col gap-1 text-sm font-medium text-[var(--color-text-muted)]';
 
-export function SignUpForm() {
+export const SignUpForm: FC = () => {
   const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
@@ -18,7 +18,7 @@ export function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
 

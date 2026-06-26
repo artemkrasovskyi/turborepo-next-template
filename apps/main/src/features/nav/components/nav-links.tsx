@@ -1,5 +1,6 @@
 'use client';
 
+import { FC, ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Bell, Bookmark, Home, LogOut, Mail, Search, User } from 'lucide-react';
@@ -14,11 +15,11 @@ type NavLinksProps = {
 type NavItem = {
   href: string;
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   matchExact?: boolean;
 };
 
-export function NavLinks({ viewer }: NavLinksProps) {
+export const NavLinks: FC<NavLinksProps> = ({ viewer }) => {
   const pathname = usePathname();
 
   const items: NavItem[] = [

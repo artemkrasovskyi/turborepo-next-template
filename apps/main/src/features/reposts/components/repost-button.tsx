@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Repeat2 } from 'lucide-react';
 import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleRepostAction } from '../actions';
@@ -12,12 +12,12 @@ type RepostButtonProps = {
   initialRepostCount: number;
 };
 
-export function RepostButton({
+export const RepostButton: FC<RepostButtonProps> = ({
   viewerId,
   postId,
   initialIsReposted,
   initialRepostCount,
-}: RepostButtonProps) {
+}) => {
   const [repostCount, setRepostCount] = useState(initialRepostCount);
   const {
     value: isReposted,

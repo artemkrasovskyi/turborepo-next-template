@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ReactNode } from 'react';
 import { getViewerUser } from '@/features/auth/lib/viewer';
 import { NavBar } from '@/features/nav/components/nav-bar';
 import './globals.css';
@@ -8,11 +9,9 @@ export const metadata: Metadata = {
   description: 'Turborepo Next.js main application',
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+type RootLayoutProps = { children: ReactNode };
+
+const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
   const viewer = await getViewerUser();
 
   return (
@@ -30,4 +29,6 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

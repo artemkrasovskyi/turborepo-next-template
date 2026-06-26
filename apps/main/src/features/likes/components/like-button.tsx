@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useOptimisticToggle } from '../../../lib/hooks/use-optimistic-toggle';
 import { toggleLikeAction } from '../actions';
@@ -12,12 +12,12 @@ type LikeButtonProps = {
   initialLikeCount: number;
 };
 
-export function LikeButton({
+export const LikeButton: FC<LikeButtonProps> = ({
   viewerId,
   postId,
   initialIsLiked,
   initialLikeCount,
-}: LikeButtonProps) {
+}) => {
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const {
     value: isLiked,

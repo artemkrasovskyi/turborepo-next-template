@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FollowListPage } from '@repo/types/features/follow';
 import { FollowUserCard } from '@/features/follow/components/follow-user-card';
 import { loadMoreUserSearchAction } from '../actions';
@@ -11,13 +11,13 @@ type UserSearchResultsProps = {
   viewerId: string | null;
 };
 
-export function UserSearchResults({ query, initialPage, viewerId }: UserSearchResultsProps) {
+export const UserSearchResults: FC<UserSearchResultsProps> = ({ query, initialPage, viewerId }) => {
   const [items, setItems] = useState(initialPage.items);
   const [nextCursor, setNextCursor] = useState(initialPage.nextCursor);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (!nextCursor) return;
     setError(null);
     startTransition(async () => {
@@ -29,7 +29,7 @@ export function UserSearchResults({ query, initialPage, viewerId }: UserSearchRe
         setError('Failed to load more. Please try again.');
       }
     });
-  }
+  };
 
   if (items.length === 0) {
     return (

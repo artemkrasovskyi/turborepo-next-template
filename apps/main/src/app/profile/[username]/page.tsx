@@ -12,7 +12,7 @@ type ProfilePageProps = {
   params: Promise<{ username: string }>;
 };
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
+const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { username } = await params;
   const viewer = await getViewerUser();
   const profile = await profileClient.getProfileByUsername(username, viewer?.id);
@@ -38,4 +38,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       <ProfilePosts userId={profile.id} viewerId={viewer?.id ?? null} />
     </main>
   );
-}
+};
+
+export default ProfilePage;

@@ -1,10 +1,11 @@
+import { FC } from 'react';
 import type { PostImage } from '@repo/types/features/posts';
 
 type PostImageGridProps = {
   images: PostImage[];
 };
 
-export function PostImageGrid({ images }: PostImageGridProps) {
+export const PostImageGrid: FC<PostImageGridProps> = ({ images }) => {
   if (images.length === 0) return null;
 
   if (images.length === 1) {

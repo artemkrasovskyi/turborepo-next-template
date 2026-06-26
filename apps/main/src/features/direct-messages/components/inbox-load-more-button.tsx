@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { InboxConversation } from '@repo/types/features/direct-messages';
 import { formatRelativeTime } from '@/features/feed/lib/format-relative-time';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
@@ -11,16 +11,15 @@ type InboxLoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-function getInitials(displayName: string): string {
-  return displayName
+const getInitials = (displayName: string): string =>
+  displayName
     .split(' ')
     .filter((part) => part.length > 0)
     .slice(0, 2)
     .map((part) => part.charAt(0).toUpperCase())
     .join('');
-}
 
-export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps) {
+export const InboxLoadMoreButton: FC<InboxLoadMoreButtonProps> = ({ initialCursor }) => {
   const [items, setItems] = useState<InboxConversation[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +29,7 @@ export function InboxLoadMoreButton({ initialCursor }: InboxLoadMoreButtonProps)
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }

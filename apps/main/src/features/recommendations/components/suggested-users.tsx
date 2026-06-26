@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import type { FollowListPage } from '@repo/types/features/follow';
 import { FollowUserCard } from '@/features/follow/components/follow-user-card';
 import { EmptyState } from '@/features/ui/components/empty-state';
@@ -8,7 +9,7 @@ type SuggestedUsersProps = {
   viewerId: string | null;
 };
 
-export function SuggestedUsers({ page, viewerId }: SuggestedUsersProps) {
+export const SuggestedUsers: FC<SuggestedUsersProps> = ({ page, viewerId }) => {
   if (page.items.length === 0) {
     return (
       <EmptyState

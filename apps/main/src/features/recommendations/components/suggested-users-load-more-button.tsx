@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FollowListUser } from '@repo/types/features/follow';
 import { FollowUserCard } from '@/features/follow/components/follow-user-card';
 import { loadMoreSuggestedUsersAction } from '../actions';
@@ -10,10 +10,10 @@ type SuggestedUsersLoadMoreButtonProps = {
   viewerId: string | null;
 };
 
-export function SuggestedUsersLoadMoreButton({
+export const SuggestedUsersLoadMoreButton: FC<SuggestedUsersLoadMoreButtonProps> = ({
   initialCursor,
   viewerId,
-}: SuggestedUsersLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<FollowListUser[]>([]);
   const [cursor, setCursor] = useState<string | null>(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export function SuggestedUsersLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }
@@ -39,7 +39,7 @@ export function SuggestedUsersLoadMoreButton({
         setError('Could not load more suggestions. Please try again.');
       }
     });
-  }
+  };
 
   return (
     <>

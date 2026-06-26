@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { FC, useState, useTransition } from 'react';
 import type { FeedPost } from '@repo/types/features/feed';
 import { FeedItem } from '@/features/feed/components/feed-item';
 import { SkeletonCard } from '@/features/ui/components/skeleton';
@@ -12,11 +12,11 @@ type LikedPostsLoadMoreButtonProps = {
   initialCursor: string | null;
 };
 
-export function LikedPostsLoadMoreButton({
+export const LikedPostsLoadMoreButton: FC<LikedPostsLoadMoreButtonProps> = ({
   userId,
   viewerId,
   initialCursor,
-}: LikedPostsLoadMoreButtonProps) {
+}) => {
   const [items, setItems] = useState<FeedPost[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function LikedPostsLoadMoreButton({
     return null;
   }
 
-  function handleLoadMore() {
+  const handleLoadMore = () => {
     if (cursor === null) {
       return;
     }

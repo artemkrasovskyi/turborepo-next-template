@@ -3,7 +3,7 @@ import { InboxList } from '@/features/direct-messages/components/inbox-list';
 
 export const dynamic = 'force-dynamic';
 
-export default async function MessagesPage() {
+const MessagesPage = async () => {
   const viewer = await requireViewerUser();
 
   return (
@@ -15,4 +15,6 @@ export default async function MessagesPage() {
       <InboxList viewerId={viewer.id} />
     </main>
   );
-}
+};
+
+export default MessagesPage;

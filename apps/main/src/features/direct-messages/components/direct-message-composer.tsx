@@ -1,8 +1,7 @@
 'use client';
 
-import type React from 'react';
+import { FC, FormEvent, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
 import { MAX_DIRECT_MESSAGE_LENGTH } from '@repo/types/features/direct-messages';
 import { sendDirectMessageAction } from '../actions';
 
@@ -10,13 +9,13 @@ type DirectMessageComposerProps = {
   conversationId: string;
 };
 
-export function DirectMessageComposer({ conversationId }: DirectMessageComposerProps) {
+export const DirectMessageComposer: FC<DirectMessageComposerProps> = ({ conversationId }) => {
   const router = useRouter();
   const [body, setBody] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
 
