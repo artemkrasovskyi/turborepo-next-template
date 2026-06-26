@@ -152,8 +152,8 @@ apps/api/src/search/search.service.ts
 ### Linting & formatting rules
 
 - ESLint extends Airbnb + `airbnb-typescript` + Prettier.
-- React components must use **arrow functions**: `const Foo: FC<Props> = ({ ... }) => { ... }`.
-- Async server components cannot use `FC<>` (async is incompatible); use a typed arrow without `FC`: `const Foo = async ({ ... }: Props) => { ... }`.
+- **Use arrow functions everywhere it does not cause an error** — components, helpers, utilities, actions. Fall back to a function declaration only when an arrow would produce a TypeScript or runtime error (e.g. a function that requires hoisting, or a class method).
+- React components use `const Foo: FC<Props> = ({ ... }) => { ... }`. Async server components cannot use `FC<>` (async is incompatible); use a typed arrow without `FC`: `const Foo = async ({ ... }: Props) => { ... }`.
 - `FC` and all React types (`FormEvent`, `ChangeEvent`, `ReactNode`, etc.) must be imported directly from `'react'`, never accessed via the `React.X` namespace.
 - Prettier: single quotes, trailing commas everywhere, 100-char print width.
 - Stylelint uses `stylelint-config-standard` with Tailwind at-rules allowed.
