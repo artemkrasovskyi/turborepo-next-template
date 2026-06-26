@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { getViewerUser } from '@/features/auth/lib/viewer';
 import { NavBar } from '@/features/nav/components/nav-bar';
+import { RealtimeStatus } from '@/features/realtime/components/realtime-status';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
         />
         <NavBar viewer={viewer} />
         {children}
+        {process.env.NODE_ENV !== 'production' && <RealtimeStatus />}
       </body>
     </html>
   );
