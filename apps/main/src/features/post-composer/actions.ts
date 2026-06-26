@@ -11,10 +11,10 @@ export type CreatePostResult =
   | { id: string; error?: undefined }
   | { id?: undefined; error: string };
 
-export async function createPostAction(
+export const createPostAction = async (
   body: string,
   imageUrls: string[] = [],
-): Promise<CreatePostResult> {
+): Promise<CreatePostResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to post.' };
@@ -29,4 +29,4 @@ export async function createPostAction(
   const post = await postsClient.createPost({ authorId: viewer.id, body: result.trimmed, imageUrls });
   revalidatePath('/');
   return { id: post.id };
-}
+};

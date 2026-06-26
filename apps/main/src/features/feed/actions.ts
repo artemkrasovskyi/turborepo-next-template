@@ -5,6 +5,5 @@ import type { FeedPage } from '@repo/types/features/feed';
 
 const feedClient = createFeedClient();
 
-export async function loadMoreFeedAction(viewerId: string, cursor: string): Promise<FeedPage> {
-  return feedClient.getHomeFeed({ viewerId, cursor });
-}
+export const loadMoreFeedAction = async (viewerId: string, cursor: string): Promise<FeedPage> =>
+  feedClient.getHomeFeed({ viewerId, cursor });

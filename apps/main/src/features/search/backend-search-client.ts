@@ -15,12 +15,12 @@ type SearchUsersParams = {
   viewerId?: string | undefined;
 };
 
-export async function searchUsersFromBackend({
+export const searchUsersFromBackend = async ({
   query,
   cursor,
   limit,
   viewerId,
-}: SearchUsersParams): Promise<FollowListPage> {
+}: SearchUsersParams): Promise<FollowListPage> => {
   const url = new URL('/search/users', API_BASE_URL);
 
   url.searchParams.set('query', query);
@@ -44,4 +44,4 @@ export async function searchUsersFromBackend({
   }
 
   return response.json() as Promise<FollowListPage>;
-}
+};

@@ -8,22 +8,20 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 
 const profileClient = createProfileClient();
 
-export async function loadMoreProfilePostsAction(
+export const loadMoreProfilePostsAction = async (
   userId: string,
   cursor: string,
   viewerId?: string | undefined,
-): Promise<FeedPage> {
-  return profileClient.getProfilePosts({ userId, viewerId, cursor });
-}
+): Promise<FeedPage> => profileClient.getProfilePosts({ userId, viewerId, cursor });
 
 export type UpdateProfileResult = { ok: true; error?: undefined } | { ok?: undefined; error: string };
 
-export async function updateProfileAction(
+export const updateProfileAction = async (
   username: string,
   displayName: string,
   bio: string | null,
   avatarUrl: string | null,
-): Promise<UpdateProfileResult> {
+): Promise<UpdateProfileResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to edit your profile.' };
@@ -48,4 +46,4 @@ export async function updateProfileAction(
     revalidatePath(`/profile/${viewer.username}`);
   }
   return { ok: true };
-}
+};

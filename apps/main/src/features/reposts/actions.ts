@@ -6,10 +6,10 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 
 const repostsClient = createRepostsClient();
 
-export async function toggleRepostAction(
+export const toggleRepostAction = async (
   postId: string,
   nextIsReposted: boolean,
-): Promise<ToggleRepostResult> {
+): Promise<ToggleRepostResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to repost.' };
@@ -24,4 +24,4 @@ export async function toggleRepostAction(
   }
 
   return { isReposted: nextIsReposted };
-}
+};

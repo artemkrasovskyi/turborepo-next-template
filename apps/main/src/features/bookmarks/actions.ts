@@ -7,10 +7,10 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 
 const bookmarksClient = createBookmarksClient();
 
-export async function toggleBookmarkAction(
+export const toggleBookmarkAction = async (
   postId: string,
   nextIsBookmarked: boolean,
-): Promise<ToggleBookmarkResult> {
+): Promise<ToggleBookmarkResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return {
@@ -28,11 +28,9 @@ export async function toggleBookmarkAction(
   }
 
   return { isBookmarked: nextIsBookmarked };
-}
+};
 
-export async function loadMoreBookmarkedPostsAction(
-  cursor: string,
-): Promise<FeedPage> {
+export const loadMoreBookmarkedPostsAction = async (cursor: string): Promise<FeedPage> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { items: [], nextCursor: null };
@@ -40,4 +38,4 @@ export async function loadMoreBookmarkedPostsAction(
 
   const userId = viewer.id;
   return bookmarksClient.getBookmarkedPosts({ userId, viewerId: userId, cursor });
-}
+};

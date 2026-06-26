@@ -25,7 +25,7 @@ export const getViewerUser = cache(async (): Promise<ViewerUser | null> => {
   });
 });
 
-export async function requireViewerUser(): Promise<ViewerUser> {
+export const requireViewerUser = async (): Promise<ViewerUser> => {
   const viewer = await getViewerUser();
 
   if (!viewer) {
@@ -33,4 +33,4 @@ export async function requireViewerUser(): Promise<ViewerUser> {
   }
 
   return viewer;
-}
+};

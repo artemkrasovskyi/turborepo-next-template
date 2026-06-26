@@ -9,10 +9,10 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 const followClient = createFollowClient();
 const notificationsClient = createNotificationsClient();
 
-export async function toggleFollowAction(
+export const toggleFollowAction = async (
   followingId: string,
   nextIsFollowing: boolean,
-): Promise<ToggleFollowResult> {
+): Promise<ToggleFollowResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to follow people.' };
@@ -35,20 +35,16 @@ export async function toggleFollowAction(
 
   revalidatePath('/profile/[username]', 'page');
   return { isFollowing: nextIsFollowing };
-}
+};
 
-export async function loadMoreFollowersAction(
+export const loadMoreFollowersAction = async (
   userId: string,
   cursor: string,
   viewerId?: string,
-): Promise<FollowListPage> {
-  return followClient.getFollowers({ userId, viewerId, cursor });
-}
+): Promise<FollowListPage> => followClient.getFollowers({ userId, viewerId, cursor });
 
-export async function loadMoreFollowingAction(
+export const loadMoreFollowingAction = async (
   userId: string,
   cursor: string,
   viewerId?: string,
-): Promise<FollowListPage> {
-  return followClient.getFollowing({ userId, viewerId, cursor });
-}
+): Promise<FollowListPage> => followClient.getFollowing({ userId, viewerId, cursor });

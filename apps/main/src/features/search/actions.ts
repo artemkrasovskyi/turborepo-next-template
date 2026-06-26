@@ -8,10 +8,9 @@
 import type { FollowListPage } from '@repo/types/features/follow';
 import { searchUsersFromBackend } from './backend-search-client';
 
-export async function loadMoreUserSearchAction(
+export const loadMoreUserSearchAction = async (
   query: string,
   cursor: string,
   viewerId?: string,
-): Promise<FollowListPage> {
-  return searchUsersFromBackend({ query, cursor, ...(viewerId ? { viewerId } : {}) });
-}
+): Promise<FollowListPage> =>
+  searchUsersFromBackend({ query, cursor, ...(viewerId ? { viewerId } : {}) });

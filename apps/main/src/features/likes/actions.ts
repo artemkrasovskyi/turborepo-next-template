@@ -9,10 +9,10 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 const likesClient = createLikesClient();
 const notificationsClient = createNotificationsClient();
 
-export async function toggleLikeAction(
+export const toggleLikeAction = async (
   postId: string,
   nextIsLiked: boolean,
-): Promise<ToggleLikeResult> {
+): Promise<ToggleLikeResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to like posts.' };
@@ -30,12 +30,10 @@ export async function toggleLikeAction(
   }
 
   return { isLiked: nextIsLiked };
-}
+};
 
-export async function loadMoreLikedPostsAction(
+export const loadMoreLikedPostsAction = async (
   userId: string,
   cursor: string,
   viewerId?: string,
-): Promise<FeedPage> {
-  return likesClient.getLikedPosts({ userId, cursor, ...(viewerId ? { viewerId } : {}) });
-}
+): Promise<FeedPage> => likesClient.getLikedPosts({ userId, cursor, ...(viewerId ? { viewerId } : {}) });

@@ -6,16 +6,12 @@ import type { FollowListPage } from '@repo/types/features/follow';
 
 const recommendationsClient = createRecommendationsClient();
 
-export async function loadMoreSuggestedUsersAction(
+export const loadMoreSuggestedUsersAction = async (
   cursor: string,
   viewerId?: string,
-): Promise<FollowListPage> {
-  return recommendationsClient.getSuggestedUsers({ viewerId, cursor });
-}
+): Promise<FollowListPage> => recommendationsClient.getSuggestedUsers({ viewerId, cursor });
 
-export async function loadMoreRecommendedPostsAction(
+export const loadMoreRecommendedPostsAction = async (
   cursor: string,
   viewerId?: string,
-): Promise<FeedPage> {
-  return recommendationsClient.getRecommendedPosts({ viewerId, cursor });
-}
+): Promise<FeedPage> => recommendationsClient.getRecommendedPosts({ viewerId, cursor });

@@ -9,7 +9,7 @@ const UNITS: Array<{ unit: Intl.RelativeTimeFormatUnit; ms: number }> = [
 
 const relativeTimeFormatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
-export function formatRelativeTime(isoDate: string): string {
+export const formatRelativeTime = (isoDate: string): string => {
   const diffMs = new Date(isoDate).getTime() - Date.now();
   const absMs = Math.abs(diffMs);
 
@@ -20,4 +20,4 @@ export function formatRelativeTime(isoDate: string): string {
   }
 
   return relativeTimeFormatter.format(Math.round(diffMs / unitEntry.ms), unitEntry.unit);
-}
+};

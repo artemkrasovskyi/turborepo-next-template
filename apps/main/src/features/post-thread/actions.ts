@@ -11,11 +11,11 @@ export type CreateReplyResult =
   | { id: string; error?: undefined }
   | { id?: undefined; error: string };
 
-export async function createReplyAction(
+export const createReplyAction = async (
   parentId: string,
   body: string,
   imageUrls: string[] = [],
-): Promise<CreateReplyResult> {
+): Promise<CreateReplyResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to reply.' };
@@ -35,4 +35,4 @@ export async function createReplyAction(
   });
   revalidatePath(`/posts/${parentId}`);
   return { id: reply.id };
-}
+};

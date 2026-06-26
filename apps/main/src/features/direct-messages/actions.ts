@@ -12,9 +12,9 @@ import { getViewerUser } from '@/features/auth/lib/viewer';
 
 const directMessagesClient = createDirectMessagesClient();
 
-export async function startConversationAction(
+export const startConversationAction = async (
   otherUserId: string,
-): Promise<StartConversationResult> {
+): Promise<StartConversationResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to start a conversation.' };
@@ -22,12 +22,12 @@ export async function startConversationAction(
 
   const viewerId = viewer.id;
   return directMessagesClient.getOrCreateConversation({ viewerId, otherUserId });
-}
+};
 
-export async function sendDirectMessageAction(
+export const sendDirectMessageAction = async (
   conversationId: string,
   body: string,
-): Promise<SendDirectMessageResult> {
+): Promise<SendDirectMessageResult> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { error: 'You must be signed in to send messages.' };
@@ -42,9 +42,9 @@ export async function sendDirectMessageAction(
   }
 
   return result;
-}
+};
 
-export async function loadMoreInboxAction(cursor: string): Promise<InboxPage> {
+export const loadMoreInboxAction = async (cursor: string): Promise<InboxPage> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return { items: [], nextCursor: null };
@@ -52,12 +52,12 @@ export async function loadMoreInboxAction(cursor: string): Promise<InboxPage> {
 
   const viewerId = viewer.id;
   return directMessagesClient.getInbox({ viewerId, cursor });
-}
+};
 
-export async function loadOlderMessagesAction(
+export const loadOlderMessagesAction = async (
   conversationId: string,
   cursor: string,
-): Promise<ConversationThread | null> {
+): Promise<ConversationThread | null> => {
   const viewer = await getViewerUser();
   if (!viewer) {
     return null;
@@ -65,4 +65,4 @@ export async function loadOlderMessagesAction(
 
   const viewerId = viewer.id;
   return directMessagesClient.getConversation({ conversationId, viewerId, cursor });
-}
+};

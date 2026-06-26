@@ -5,9 +5,7 @@ import type { NotificationPage } from '@repo/types/features/notifications';
 
 const notificationsClient = createNotificationsClient();
 
-export async function loadMoreNotificationsAction(
+export const loadMoreNotificationsAction = async (
   userId: string,
   cursor: string,
-): Promise<NotificationPage> {
-  return notificationsClient.getNotifications({ userId, cursor });
-}
+): Promise<NotificationPage> => notificationsClient.getNotifications({ userId, cursor });
