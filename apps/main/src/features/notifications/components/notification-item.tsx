@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { NotificationItem as NotificationItemData } from '@repo/types/features/notifications';
-import { formatRelativeTime } from '../lib/format-relative-time';
+import { RelativeTime } from '@/features/ui/components/relative-time';
 
 type NotificationItemProps = {
   notification: NotificationItemData;
@@ -44,7 +44,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
             &ldquo;{truncate(post.body, POST_SNIPPET_LENGTH)}&rdquo;
           </p>
         ) : null}
-        <p className="mt-1 text-sm text-[var(--color-text-muted)]">{formatRelativeTime(createdAt)}</p>
+        <p className="mt-1 text-sm text-[var(--color-text-muted)]"><RelativeTime isoDate={createdAt} /></p>
       </div>
     </Link>
   );

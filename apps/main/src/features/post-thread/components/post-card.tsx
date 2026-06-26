@@ -2,7 +2,7 @@ import type { ThreadPost } from '@repo/types/features/posts';
 import { BookmarkButton } from '@/features/bookmarks/components/bookmark-button';
 import { LikeButton } from '@/features/likes/components/like-button';
 import { PostImageGrid } from '@/features/ui/components/post-image-grid';
-import { formatRelativeTime } from '../lib/format-relative-time';
+import { RelativeTime } from '@/features/ui/components/relative-time';
 
 type PostCardProps = {
   post: ThreadPost;
@@ -28,7 +28,7 @@ export function PostCard({ post, viewerId }: PostCardProps) {
         <div>
           <p className="font-semibold text-[var(--color-text)]">{post.author.displayName}</p>
           <p className="text-sm text-[var(--color-text-muted)]">
-            @{post.author.username} · {formatRelativeTime(post.createdAt)}
+            @{post.author.username} · <RelativeTime isoDate={post.createdAt} />
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import type { DirectMessageItem } from '@repo/types/features/direct-messages';
-import { formatRelativeTime } from '@/features/feed/lib/format-relative-time';
+import { RelativeTime } from '@/features/ui/components/relative-time';
 
 type MessageBubbleProps = {
   message: DirectMessageItem;
@@ -20,7 +20,7 @@ export function MessageBubble({ message, viewerId }: MessageBubbleProps) {
       >
         <p className="whitespace-pre-wrap text-sm leading-6">{message.body}</p>
         <p className={isOwnMessage ? 'mt-1 text-xs text-[var(--color-accent-foreground)]/70' : 'mt-1 text-xs text-[var(--color-text-muted)]'}>
-          {formatRelativeTime(message.createdAt)}
+          <RelativeTime isoDate={message.createdAt} />
         </p>
       </div>
     </div>

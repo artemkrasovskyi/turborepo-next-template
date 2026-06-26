@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { createDirectMessagesClient } from '@repo/api-client/features/direct-messages';
 import { EmptyState } from '@/features/ui/components/empty-state';
-import { formatRelativeTime } from '@/features/feed/lib/format-relative-time';
+import { RelativeTime } from '@/features/ui/components/relative-time';
 import { InboxLoadMoreButton } from './inbox-load-more-button';
 
 const directMessagesClient = createDirectMessagesClient();
@@ -56,7 +56,7 @@ export async function InboxList({ viewerId }: InboxListProps) {
                 {conversation.otherParticipant.displayName}
               </p>
               <p className="shrink-0 text-xs text-[var(--color-text-muted)]">
-                {formatRelativeTime(conversation.lastMessageAt)}
+                <RelativeTime isoDate={conversation.lastMessageAt} />
               </p>
             </div>
             <p className="truncate text-sm text-[var(--color-text-muted)]">

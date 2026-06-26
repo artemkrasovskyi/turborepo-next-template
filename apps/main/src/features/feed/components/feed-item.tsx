@@ -5,7 +5,7 @@ import { BookmarkButton } from '@/features/bookmarks/components/bookmark-button'
 import { LikeButton } from '@/features/likes/components/like-button';
 import { RepostButton } from '@/features/reposts/components/repost-button';
 import { PostImageGrid } from '@/features/ui/components/post-image-grid';
-import { formatRelativeTime } from '../lib/format-relative-time';
+import { RelativeTime } from '@/features/ui/components/relative-time';
 
 type FeedItemProps = {
   post: FeedPost;
@@ -45,7 +45,7 @@ export function FeedItem({ post, viewerId }: FeedItemProps) {
             {post.author.displayName}
           </p>
           <p className="text-sm text-[var(--color-text-muted)]">
-            @{post.author.username} · {formatRelativeTime(post.createdAt)}
+            @{post.author.username} · <RelativeTime isoDate={post.createdAt} />
           </p>
         </div>
       </Link>
