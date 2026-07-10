@@ -52,6 +52,18 @@ describe('useRealtimeStream', () => {
       renderHook(() => useRealtimeStream());
       expect(capturedSource?.url).toBe('http://localhost:4000/realtime/stream');
     });
+
+    it('appends viewerId query param when provided', () => {
+      vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://test-api.example.com');
+      renderHook(() => useRealtimeStream({ viewerId: 'user-42' }));
+      expect(capturedSource?.url).toBe('http://test-api.example.com/realtime/stream?viewerId=user-42');
+    });
+
+    it('does not append viewerId when not provided', () => {
+      vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://test-api.example.com');
+      renderHook(() => useRealtimeStream());
+      expect(capturedSource?.url).toBe('http://test-api.example.com/realtime/stream');
+    });
   });
 
   describe('connection state', () => {
@@ -133,6 +145,60 @@ describe('useRealtimeStream', () => {
         unmount();
       });
       expect(capturedSource?.close).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('notification.created events', () => {
+    it('invokes onNotificationCreated callback with parsed NotificationItem', async () => {
+      const onNotificationCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ onNotificationCreated }));
+      const notification = {
+        id: 'notif-1',
+        type: 'FOLLOW',
+        actor: { id: 'actor-1', username: 'alice', displayName: 'Alice', avatarUrl: null },
+        createdAt: '2026-01-01T00:00:00.000Z',
+        post: null,
+      };
+      await act(async () => {
+        capturedSource?.emit('notification.created', notification);
+      });
+      expect(onNotificationCreated).toHaveBeenCalledWith(notification);
+    });
+
+    it('updates lastEvent when notification.created is received', async () => {
+      const { result } = renderHook(() => useRealtimeStream({ viewerId: 'user-1' }));
+      await act(async () => {
+        capturedSource?.emit('notification.created', {
+          id: 'notif-1',
+          type: 'FOLLOW',
+          actor: { id: 'actor-1', username: 'alice', displayName: 'Alice', avatarUrl: null },
+          createdAt: '2026-01-01T00:00:00.000Z',
+          post: null,
+        });
+      });
+      expect(result.current.lastEvent).not.toBeNull();
+    });
+
+    it('does not throw when notification.created payload is malformed JSON', async () => {
+      const onNotificationCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ onNotificationCreated }));
+      await act(async () => {
+        const handlers = (capturedSource as unknown as {
+          listeners: Record<string, Array<(event: MessageEvent) => void>>;
+        }).listeners['notification.created'] ?? [];
+        const badEvent = { data: 'not-json{{' } as MessageEvent;
+        expect(() => handlers.forEach((handler) => handler(badEvent))).not.toThrow();
+      });
+      expect(onNotificationCreated).not.toHaveBeenCalled();
+    });
+
+    it('does not invoke callback when notification payload is missing required fields', async () => {
+      const onNotificationCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ onNotificationCreated }));
+      await act(async () => {
+        capturedSource?.emit('notification.created', { someUnknownField: true });
+      });
+      expect(onNotificationCreated).not.toHaveBeenCalled();
     });
   });
 });

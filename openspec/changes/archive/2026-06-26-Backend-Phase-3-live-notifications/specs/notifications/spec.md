@@ -1,6 +1,4 @@
-# Notifications
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Follow Notifications
 
@@ -39,36 +37,3 @@ The system SHALL create a notification for a post's author each time their post 
 - **WHEN** the viewer likes a post they already liked, and no new `Like` record is created
 - **THEN** the system SHALL NOT create an additional notification
 - **AND** the backend SHALL NOT publish a live notification event
-
-### Requirement: Notifications List
-
-The system SHALL display a paginated, reverse-chronological list of the viewer's notifications.
-
-#### Scenario: Viewer has notifications
-
-- **WHEN** the viewer opens `/notifications` and has notification records
-- **THEN** the system SHALL display them ordered by `createdAt` descending, each showing the actor and the type of event
-
-#### Scenario: Viewer has no notifications
-
-- **WHEN** the viewer opens `/notifications` and has no notification records
-- **THEN** the system SHALL display an empty state indicating there are no notifications yet
-
-#### Scenario: Loading more notifications
-
-- **WHEN** more notifications exist beyond the initial page
-- **THEN** the system SHALL let the viewer load additional notifications via a "load more" control, and SHALL indicate when no further notifications remain
-
-### Requirement: Notification Navigation
-
-The system SHALL let the viewer navigate from a notification to the profile or post it relates to.
-
-#### Scenario: Follow notification
-
-- **WHEN** a "follow" notification is displayed
-- **THEN** it SHALL show the follower's identity and link to that follower's profile page
-
-#### Scenario: Like notification
-
-- **WHEN** a "like" notification is displayed
-- **THEN** it SHALL show the liker's identity and a reference to the liked post, and link to that post's thread page

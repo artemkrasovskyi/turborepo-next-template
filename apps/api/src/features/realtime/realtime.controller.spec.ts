@@ -51,11 +51,18 @@ describe('RealtimeController', () => {
   });
 
   describe('stream setup', () => {
-    it('calls openConnection with the response', () => {
+    it('calls openConnection with the response and no viewerId when absent', () => {
       const req = makeReq();
       const res = makeRes();
-      controller.stream(req, res);
-      expect(realtimeService.openConnection).toHaveBeenCalledWith(res);
+      controller.stream(req, res, undefined);
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, undefined);
+    });
+
+    it('passes viewerId to openConnection when provided', () => {
+      const req = makeReq();
+      const res = makeRes();
+      controller.stream(req, res, 'viewer-42');
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, 'viewer-42');
     });
 
     it('registers a close listener on the request', () => {

@@ -109,6 +109,98 @@ describe('RealtimeService', () => {
     });
   });
 
+  describe('viewer id tracking', () => {
+    it('registers connection without viewerId when not provided', () => {
+      const res = makeRes();
+      service.openConnection(res);
+      // @ts-expect-error accessing private for test assertion
+      expect(service.viewerConnections.size).toBe(0);
+    });
+
+    it('registers connection in viewerConnections when viewerId is provided', () => {
+      const res = makeRes();
+      const clientId = service.openConnection(res, 'viewer-1');
+      // @ts-expect-error accessing private for test assertion
+      expect(service.viewerConnections.get('viewer-1')?.has(clientId)).toBe(true);
+    });
+
+    it('supports multiple connections for the same viewerId', () => {
+      const clientId1 = service.openConnection(makeRes(), 'viewer-1');
+      const clientId2 = service.openConnection(makeRes(), 'viewer-1');
+      // @ts-expect-error accessing private for test assertion
+      const set = service.viewerConnections.get('viewer-1');
+      expect(set?.has(clientId1)).toBe(true);
+      expect(set?.has(clientId2)).toBe(true);
+    });
+
+    it('removes viewer mapping on closeConnection', () => {
+      const res = makeRes();
+      const clientId = service.openConnection(res, 'viewer-1');
+      service.closeConnection(clientId);
+      // @ts-expect-error accessing private for test assertion
+      expect(service.viewerConnections.has('viewer-1')).toBe(false);
+    });
+
+    it('removes only the closed client from the viewer set when multiple connections exist', () => {
+      const clientId1 = service.openConnection(makeRes(), 'viewer-1');
+      const clientId2 = service.openConnection(makeRes(), 'viewer-1');
+      service.closeConnection(clientId1);
+      // @ts-expect-error accessing private for test assertion
+      const set = service.viewerConnections.get('viewer-1');
+      expect(set?.has(clientId1)).toBe(false);
+      expect(set?.has(clientId2)).toBe(true);
+    });
+  });
+
+  describe('publishToUser', () => {
+    it('returns sent=0 failed=0 when no connections exist for userId', () => {
+      const result = service.publishToUser('no-one', 'notification.created', {});
+      expect(result).toEqual({ sent: 0, failed: 0 });
+    });
+
+    it('sends event to matching viewer connection', () => {
+      const res = makeRes();
+      service.openConnection(res, 'viewer-1');
+      service.publishToUser('viewer-1', 'notification.created', { id: 'notif-1' });
+      const { calls } = (res.write as ReturnType<typeof vi.fn>).mock;
+      const notifCall = calls.find(([payload]) => (payload as string).includes('notification.created'));
+      expect(notifCall).toBeDefined();
+    });
+
+    it('does not send event to connections of a different viewer', () => {
+      const res1 = makeRes();
+      const res2 = makeRes();
+      service.openConnection(res1, 'viewer-1');
+      service.openConnection(res2, 'viewer-2');
+      service.publishToUser('viewer-1', 'notification.created', { id: 'notif-1' });
+      const calls2 = (res2.write as ReturnType<typeof vi.fn>).mock.calls;
+      const notifCall = calls2.find(([payload]) => (payload as string).includes('notification.created'));
+      expect(notifCall).toBeUndefined();
+    });
+
+    it('returns correct sent count', () => {
+      service.openConnection(makeRes(), 'viewer-1');
+      service.openConnection(makeRes(), 'viewer-1');
+      const result = service.publishToUser('viewer-1', 'notification.created', {});
+      expect(result.sent).toBe(2);
+      expect(result.failed).toBe(0);
+    });
+
+    it('logs error and cleans up connection on publish write failure', () => {
+      const loggerErrorSpy = vi.spyOn(Logger.prototype, 'error');
+      const res = { writable: false, write: vi.fn() } as unknown as Response;
+      service.openConnection(res, 'viewer-1');
+      const clientId = service.openConnection(makeRes(), 'viewer-1');
+
+      // first connection is unwritable — force it to be the one registered under viewer-1
+      // by re-opening: easier to just test that failed count reflects it
+      service.closeConnection(clientId);
+      const result = service.publishToUser('viewer-1', 'notification.created', {});
+      expect(result.failed).toBe(1);
+      expect(loggerErrorSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('heartbeat write error', () => {
     it('logs and cleans up connection when heartbeat cannot be written', () => {
       const loggerErrorSpy = vi.spyOn(Logger.prototype, 'error');
