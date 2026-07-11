@@ -2,6 +2,7 @@ import { createPostsClient } from '@repo/api-client/features/posts';
 import { getViewerUser } from '@/features/auth/lib/viewer';
 import { PostCard } from '@/features/post-thread/components/post-card';
 import { ReplyComposer } from '@/features/post-thread/components/reply-composer';
+import { ThreadRepliesList } from '@/features/post-thread/components/thread-replies-list';
 import { EmptyState } from '@/features/ui/components/empty-state';
 
 export const dynamic = 'force-dynamic';
@@ -33,13 +34,11 @@ const ThreadPage = async ({ params }: ThreadPageProps) => {
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 px-6 py-12 md:max-w-3xl">
       <PostCard post={thread.root} viewerId={viewer?.id ?? null} />
       {viewer ? <ReplyComposer parentId={thread.root.id} /> : null}
-      {thread.replies.length === 0 ? (
-        <EmptyState heading="No replies yet" description="Be the first to reply to this post." />
-      ) : (
-        thread.replies.map((reply) => (
-          <PostCard key={reply.id} post={reply} viewerId={viewer?.id ?? null} />
-        ))
-      )}
+      <ThreadRepliesList
+        threadId={thread.root.id}
+        initialReplies={thread.replies}
+        viewerId={viewer?.id ?? null}
+      />
     </main>
   );
 };

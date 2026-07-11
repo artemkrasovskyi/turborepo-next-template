@@ -64,6 +64,26 @@ describe('useRealtimeStream', () => {
       renderHook(() => useRealtimeStream());
       expect(capturedSource?.url).toBe('http://test-api.example.com/realtime/stream');
     });
+
+    it('appends threadId query param when provided', () => {
+      vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://test-api.example.com');
+      renderHook(() => useRealtimeStream({ threadId: 'thread-1' }));
+      expect(capturedSource?.url).toBe('http://test-api.example.com/realtime/stream?threadId=thread-1');
+    });
+
+    it('does not append threadId when not provided', () => {
+      vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://test-api.example.com');
+      renderHook(() => useRealtimeStream());
+      expect(capturedSource?.url).toBe('http://test-api.example.com/realtime/stream');
+    });
+
+    it('appends both viewerId and threadId when both are provided', () => {
+      vi.stubEnv('NEXT_PUBLIC_API_URL', 'http://test-api.example.com');
+      renderHook(() => useRealtimeStream({ viewerId: 'user-42', threadId: 'thread-1' }));
+      expect(capturedSource?.url).toBe(
+        'http://test-api.example.com/realtime/stream?viewerId=user-42&threadId=thread-1',
+      );
+    });
   });
 
   describe('connection state', () => {
@@ -199,6 +219,80 @@ describe('useRealtimeStream', () => {
         capturedSource?.emit('notification.created', { someUnknownField: true });
       });
       expect(onNotificationCreated).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reply.created events', () => {
+    const makeReply = () => ({
+      id: 'reply-1',
+      body: 'Hello',
+      createdAt: '2026-01-01T00:00:00.000Z',
+      author: { id: 'author-1', username: 'alice', displayName: 'Alice', avatarUrl: null },
+      likeCount: 0,
+      isLikedByViewer: false,
+      isBookmarkedByViewer: false,
+      images: [],
+    });
+
+    it('invokes onReplyCreated callback with parsed reply for the subscribed thread', async () => {
+      const onReplyCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ threadId: 'thread-1', onReplyCreated }));
+      const reply = makeReply();
+      await act(async () => {
+        capturedSource?.emit('reply.created', {
+          threadId: 'thread-1',
+          reply,
+          timestamp: '2026-01-01T00:00:00.000Z',
+        });
+      });
+      expect(onReplyCreated).toHaveBeenCalledWith(reply);
+    });
+
+    it('does not invoke callback for a reply.created event from another thread', async () => {
+      const onReplyCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ threadId: 'thread-1', onReplyCreated }));
+      await act(async () => {
+        capturedSource?.emit('reply.created', {
+          threadId: 'thread-2',
+          reply: makeReply(),
+          timestamp: '2026-01-01T00:00:00.000Z',
+        });
+      });
+      expect(onReplyCreated).not.toHaveBeenCalled();
+    });
+
+    it('updates lastEvent when a matching reply.created is received', async () => {
+      const { result } = renderHook(() => useRealtimeStream({ threadId: 'thread-1' }));
+      await act(async () => {
+        capturedSource?.emit('reply.created', {
+          threadId: 'thread-1',
+          reply: makeReply(),
+          timestamp: '2026-01-01T00:00:00.000Z',
+        });
+      });
+      expect(result.current.lastEvent).not.toBeNull();
+    });
+
+    it('does not throw when reply.created payload is malformed JSON', async () => {
+      const onReplyCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ threadId: 'thread-1', onReplyCreated }));
+      await act(async () => {
+        const handlers = (capturedSource as unknown as {
+          listeners: Record<string, Array<(event: MessageEvent) => void>>;
+        }).listeners['reply.created'] ?? [];
+        const badEvent = { data: 'not-json{{' } as MessageEvent;
+        expect(() => handlers.forEach((handler) => handler(badEvent))).not.toThrow();
+      });
+      expect(onReplyCreated).not.toHaveBeenCalled();
+    });
+
+    it('does not invoke callback when reply payload is missing required fields', async () => {
+      const onReplyCreated = vi.fn();
+      renderHook(() => useRealtimeStream({ threadId: 'thread-1', onReplyCreated }));
+      await act(async () => {
+        capturedSource?.emit('reply.created', { threadId: 'thread-1' });
+      });
+      expect(onReplyCreated).not.toHaveBeenCalled();
     });
   });
 });

@@ -4,14 +4,18 @@
  * @openspec openspec/specs/frontend-realtime/spec.md
  * @change Phase-20-realtime-ui
  * @change Phase-21-live-notifications
+ * @change Phase-22-live-replies
  */
 import { useEffect, useRef, useState } from 'react';
 import type { NotificationItem } from '@repo/types/features/notifications';
-import type { ConnectedEvent, ConnectionState, HeartbeatEvent, SystemEvent } from '../types';
+import type { ThreadPost } from '@repo/types/features/posts';
+import type { ConnectedEvent, ConnectionState, HeartbeatEvent, ReplyCreatedEvent, SystemEvent } from '../types';
 
 export type UseRealtimeStreamOptions = {
   viewerId?: string;
+  threadId?: string;
   onNotificationCreated?: (notification: NotificationItem) => void;
+  onReplyCreated?: (reply: ThreadPost) => void;
 };
 
 export type UseRealtimeStreamResult = {
@@ -20,7 +24,7 @@ export type UseRealtimeStreamResult = {
 };
 
 export const useRealtimeStream = (options: UseRealtimeStreamOptions = {}): UseRealtimeStreamResult => {
-  const { viewerId, onNotificationCreated } = options;
+  const { viewerId, threadId, onNotificationCreated, onReplyCreated } = options;
   const [connectionState, setConnectionState] = useState<ConnectionState>('disconnected');
   const [lastEvent, setLastEvent] = useState<string | null>(null);
 
@@ -29,10 +33,16 @@ export const useRealtimeStream = (options: UseRealtimeStreamOptions = {}): UseRe
     onNotificationCreatedRef.current = onNotificationCreated;
   });
 
+  const onReplyCreatedRef = useRef(onReplyCreated);
+  useEffect(() => {
+    onReplyCreatedRef.current = onReplyCreated;
+  });
+
   useEffect(() => {
     const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:4000';
     const url = new URL(`${apiUrl}/realtime/stream`);
     if (viewerId) url.searchParams.set('viewerId', viewerId);
+    if (threadId) url.searchParams.set('threadId', threadId);
 
     const source = new EventSource(url.toString());
 
@@ -63,6 +73,18 @@ export const useRealtimeStream = (options: UseRealtimeStreamOptions = {}): UseRe
       }
     });
 
+    source.addEventListener('reply.created', (event) => {
+      try {
+        const data = JSON.parse((event as MessageEvent).data as string) as ReplyCreatedEvent;
+        if (!data || typeof data.threadId !== 'string' || !data.reply || typeof data.reply.id !== 'string') return;
+        if (data.threadId !== threadId) return;
+        setLastEvent(new Date().toISOString());
+        onReplyCreatedRef.current?.(data.reply);
+      } catch {
+        // ignore malformed events
+      }
+    });
+
     source.onerror = () => {
       setConnectionState('reconnecting');
     };
@@ -71,7 +93,7 @@ export const useRealtimeStream = (options: UseRealtimeStreamOptions = {}): UseRe
       source.close();
       setConnectionState('disconnected');
     };
-  }, [viewerId]);
+  }, [viewerId, threadId]);
 
   return { connectionState, lastEvent };
 };
