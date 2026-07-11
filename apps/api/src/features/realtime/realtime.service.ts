@@ -2,6 +2,7 @@
  * @openspec openspec/specs/node-api-app/spec.md
  * @change Backend-Phase-2-realtime-module
  * @change Backend-Phase-3-live-notifications
+ * @change Backend-Phase-4-live-replies
  */
 import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
@@ -13,6 +14,7 @@ interface Connection {
   res: Response;
   heartbeatTimer: ReturnType<typeof setInterval>;
   viewerId?: string;
+  threadId?: string;
 }
 
 export type PublishResult = { sent: number; failed: number };
@@ -25,7 +27,9 @@ export class RealtimeService {
 
   private readonly viewerConnections = new Map<string, Set<string>>();
 
-  openConnection(res: Response, viewerId?: string): string {
+  private readonly threadConnections = new Map<string, Set<string>>();
+
+  openConnection(res: Response, viewerId?: string, threadId?: string): string {
     const clientId = randomUUID();
 
     RealtimeService.sendEvent(res, 'connected', { clientId, timestamp: new Date().toISOString() });
@@ -38,13 +42,20 @@ export class RealtimeService {
       }
     }, HEARTBEAT_INTERVAL_MS);
 
-    this.connections.set(clientId, { res, heartbeatTimer, viewerId });
+    this.connections.set(clientId, { res, heartbeatTimer, viewerId, threadId });
 
     if (viewerId) {
       if (!this.viewerConnections.has(viewerId)) {
         this.viewerConnections.set(viewerId, new Set());
       }
       this.viewerConnections.get(viewerId)!.add(clientId);
+    }
+
+    if (threadId) {
+      if (!this.threadConnections.has(threadId)) {
+        this.threadConnections.set(threadId, new Set());
+      }
+      this.threadConnections.get(threadId)!.add(clientId);
     }
 
     this.logger.log(`Connection opened: clientId=${clientId}`);
@@ -68,11 +79,32 @@ export class RealtimeService {
       }
     }
 
+    if (connection.threadId) {
+      const threadSet = this.threadConnections.get(connection.threadId);
+      if (threadSet) {
+        threadSet.delete(clientId);
+        if (threadSet.size === 0) {
+          this.threadConnections.delete(connection.threadId);
+        }
+      }
+    }
+
     this.logger.log(`Connection closed: clientId=${clientId}`);
   }
 
   publishToUser(userId: string, event: string, data: unknown): PublishResult {
-    const clientIds = this.viewerConnections.get(userId);
+    return this.publishToClients(this.viewerConnections.get(userId), event, data);
+  }
+
+  publishToThread(threadId: string, event: string, data: unknown): PublishResult {
+    return this.publishToClients(this.threadConnections.get(threadId), event, data);
+  }
+
+  private publishToClients(
+    clientIds: Set<string> | undefined,
+    event: string,
+    data: unknown,
+  ): PublishResult {
     if (!clientIds || clientIds.size === 0) return { sent: 0, failed: 0 };
 
     return [...clientIds].reduce<PublishResult>(

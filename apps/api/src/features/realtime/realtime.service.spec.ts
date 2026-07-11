@@ -152,6 +152,102 @@ describe('RealtimeService', () => {
     });
   });
 
+  describe('thread id tracking', () => {
+    it('registers connection without threadId when not provided', () => {
+      const res = makeRes();
+      service.openConnection(res);
+      // @ts-expect-error accessing private for test assertion
+      expect(service.threadConnections.size).toBe(0);
+    });
+
+    it('registers connection in threadConnections when threadId is provided', () => {
+      const res = makeRes();
+      const clientId = service.openConnection(res, undefined, 'thread-1');
+      // @ts-expect-error accessing private for test assertion
+      expect(service.threadConnections.get('thread-1')?.has(clientId)).toBe(true);
+    });
+
+    it('supports multiple connections for the same threadId', () => {
+      const clientId1 = service.openConnection(makeRes(), undefined, 'thread-1');
+      const clientId2 = service.openConnection(makeRes(), undefined, 'thread-1');
+      // @ts-expect-error accessing private for test assertion
+      const set = service.threadConnections.get('thread-1');
+      expect(set?.has(clientId1)).toBe(true);
+      expect(set?.has(clientId2)).toBe(true);
+    });
+
+    it('supports a connection with both viewerId and threadId', () => {
+      const clientId = service.openConnection(makeRes(), 'viewer-1', 'thread-1');
+      // @ts-expect-error accessing private for test assertion
+      expect(service.viewerConnections.get('viewer-1')?.has(clientId)).toBe(true);
+      // @ts-expect-error accessing private for test assertion
+      expect(service.threadConnections.get('thread-1')?.has(clientId)).toBe(true);
+    });
+
+    it('removes thread mapping on closeConnection', () => {
+      const res = makeRes();
+      const clientId = service.openConnection(res, undefined, 'thread-1');
+      service.closeConnection(clientId);
+      // @ts-expect-error accessing private for test assertion
+      expect(service.threadConnections.has('thread-1')).toBe(false);
+    });
+
+    it('removes only the closed client from the thread set when multiple connections exist', () => {
+      const clientId1 = service.openConnection(makeRes(), undefined, 'thread-1');
+      const clientId2 = service.openConnection(makeRes(), undefined, 'thread-1');
+      service.closeConnection(clientId1);
+      // @ts-expect-error accessing private for test assertion
+      const set = service.threadConnections.get('thread-1');
+      expect(set?.has(clientId1)).toBe(false);
+      expect(set?.has(clientId2)).toBe(true);
+    });
+  });
+
+  describe('publishToThread', () => {
+    it('returns sent=0 failed=0 when no connections exist for threadId', () => {
+      const result = service.publishToThread('no-thread', 'reply.created', {});
+      expect(result).toEqual({ sent: 0, failed: 0 });
+    });
+
+    it('sends event to matching thread connection', () => {
+      const res = makeRes();
+      service.openConnection(res, undefined, 'thread-1');
+      service.publishToThread('thread-1', 'reply.created', { id: 'reply-1' });
+      const { calls } = (res.write as ReturnType<typeof vi.fn>).mock;
+      const replyCall = calls.find(([payload]) => (payload as string).includes('reply.created'));
+      expect(replyCall).toBeDefined();
+    });
+
+    it('does not send event to connections of a different thread', () => {
+      const res1 = makeRes();
+      const res2 = makeRes();
+      service.openConnection(res1, undefined, 'thread-1');
+      service.openConnection(res2, undefined, 'thread-2');
+      service.publishToThread('thread-1', 'reply.created', { id: 'reply-1' });
+      const calls2 = (res2.write as ReturnType<typeof vi.fn>).mock.calls;
+      const replyCall = calls2.find(([payload]) => (payload as string).includes('reply.created'));
+      expect(replyCall).toBeUndefined();
+    });
+
+    it('returns correct sent count for multiple connections on the same thread', () => {
+      service.openConnection(makeRes(), undefined, 'thread-1');
+      service.openConnection(makeRes(), undefined, 'thread-1');
+      const result = service.publishToThread('thread-1', 'reply.created', {});
+      expect(result.sent).toBe(2);
+      expect(result.failed).toBe(0);
+    });
+
+    it('logs error and cleans up connection on publish write failure', () => {
+      const loggerErrorSpy = vi.spyOn(Logger.prototype, 'error');
+      const res = { writable: false, write: vi.fn() } as unknown as Response;
+      service.openConnection(res, undefined, 'thread-1');
+
+      const result = service.publishToThread('thread-1', 'reply.created', {});
+      expect(result.failed).toBe(1);
+      expect(loggerErrorSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('publishToUser', () => {
     it('returns sent=0 failed=0 when no connections exist for userId', () => {
       const result = service.publishToUser('no-one', 'notification.created', {});

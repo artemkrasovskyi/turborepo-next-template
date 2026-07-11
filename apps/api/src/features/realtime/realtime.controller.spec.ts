@@ -55,14 +55,28 @@ describe('RealtimeController', () => {
       const req = makeReq();
       const res = makeRes();
       controller.stream(req, res, undefined);
-      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, undefined);
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, undefined, undefined);
     });
 
     it('passes viewerId to openConnection when provided', () => {
       const req = makeReq();
       const res = makeRes();
       controller.stream(req, res, 'viewer-42');
-      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, 'viewer-42');
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, 'viewer-42', undefined);
+    });
+
+    it('passes threadId to openConnection when provided', () => {
+      const req = makeReq();
+      const res = makeRes();
+      controller.stream(req, res, undefined, 'thread-42');
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, undefined, 'thread-42');
+    });
+
+    it('passes both viewerId and threadId to openConnection when provided', () => {
+      const req = makeReq();
+      const res = makeRes();
+      controller.stream(req, res, 'viewer-42', 'thread-42');
+      expect(realtimeService.openConnection).toHaveBeenCalledWith(res, 'viewer-42', 'thread-42');
     });
 
     it('registers a close listener on the request', () => {
