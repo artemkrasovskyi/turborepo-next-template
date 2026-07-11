@@ -40,4 +40,4 @@
 - [x] 5.2 Run `bunx turbo lint --filter=@repo/main`
 - [x] 5.3 Run `bunx turbo test --filter=@repo/main`
 - [x] 5.4 Run `bunx turbo build --filter=@repo/main`
-- [ ] 5.5 With frontend and backend running, verify a live `notification.created` event appears on `/notifications`
+- [x] 5.5 With frontend and backend running, verify a live `notification.created` event appears on `/notifications`
