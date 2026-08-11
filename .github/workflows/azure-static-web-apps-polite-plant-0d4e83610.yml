@@ -17,15 +17,18 @@ jobs:
   
     steps:
       - uses: actions/checkout@v4
-
+  
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.1.38
-    
+  
       - name: Install dependencies
         run: bun install
-    
+  
+      - name: Build main app
+        run: bunx turbo build --filter=@repo/main
+  
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -36,7 +39,9 @@ jobs:
   
           app_location: "apps/main"
           api_location: ""
-          output_location: ""
+          output_location: ".next"
+  
+          skip_app_build: true
   
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
