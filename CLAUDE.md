@@ -123,6 +123,18 @@ All implemented OpenSpec changes must be traceable from specification to code.
   2. Read the referenced specification.
   3. Review the existing implementation before proposing changes.
 
+## Security Check Workflow
+
+Every phase's `tasks.md` must include a security check as part of its Verification section, run after implementation is complete and before archiving.
+
+- Add a task item such as: `Run security check (differential-review, insecure-defaults, sharp-edges)`.
+- Run the security check via a fresh agent with no prior context (not a fork of the implementation session) — it must not inherit assumptions or rationale from the implementation work, only the diff and code it reads itself.
+- Run `differential-review` against the phase's diff to catch security regressions and estimate blast radius.
+- If the phase touches config, environment variables, auth, or secrets, also run `insecure-defaults`.
+- If the phase introduces or changes a public API/interface (route, server action, exported client function), also run `sharp-edges`.
+- If the phase adds or bumps a dependency, also run `supply-chain-risk-auditor`.
+- Do not archive the change until the security check task is checked off.
+
 ## Graphify Workflow
 
 After completing and archiving an OpenSpec change:
